@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GitHub-hosted runners, as they actually are — Nyrvo</title>
-<meta name="description" content="What GitHub Actions runner images actually contain: Go, Node, Python, Ruby, PHP, Rust, Java and Docker versions, captured daily with Nyrvo.">
-<link rel="canonical" href="https://runners.nyrvo.dev/">
+<title>Os runners do GitHub, como eles realmente são — Nyrvo</title>
+<meta name="description" content="O que as imagens de runner do GitHub Actions realmente contêm: versões de Go, Node, Python, Ruby, PHP, Rust, Java e Docker, capturadas todo dia com o Nyrvo.">
+<link rel="canonical" href="https://runners.nyrvo.dev/pt/">
 <link rel="alternate" hreflang="en" href="https://runners.nyrvo.dev/">
 <link rel="alternate" hreflang="pt-BR" href="https://runners.nyrvo.dev/pt/">
 <link rel="alternate" hreflang="x-default" href="https://runners.nyrvo.dev/">
-<meta property="og:title" content="GitHub-hosted runners, as they actually are">
-<meta property="og:description" content="What GitHub Actions runner images actually contain, captured daily.">
+<meta property="og:title" content="Os runners do GitHub, como eles realmente são">
+<meta property="og:description" content="O que as imagens de runner do GitHub Actions realmente contêm, capturado todo dia.">
 <meta property="og:type" content="website">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23161826'/%3E%3Crect x='4' y='4' width='8' height='8' rx='2' fill='%239184d9'/%3E%3C/svg%3E">
 <style>
@@ -60,26 +60,26 @@ footer a{text-decoration:none}
 <main class="wrap">
   <div class="topbar">
     <a class="brand" href="https://nyrvo.dev/"><span></span>nyrvo</a>
-    <a class="langlink" href="https://runners.nyrvo.dev/pt/" hreflang="pt-BR">Português</a>
+    <a class="langlink" href="https://runners.nyrvo.dev/" hreflang="en">English</a>
   </div>
-  <h1>GitHub-hosted runners, as they actually are</h1>
-  <p class="lede">Every runner image below is captured once a day with
-  <a href="https://github.com/nyrvo-dev/nyrvo">Nyrvo</a> and committed to
-  <a href="https://github.com/nyrvo-dev/nyrvo-runners">a public repository</a>.
-  A dash means the image does not carry that tool at all — which is worth
-  knowing before a workflow assumes it does. A question mark means the probe
-  did not answer in time, so whether the image carries that tool is unknown
-  rather than ruled out.</p>
-  <p class="lede">A commit exists only when something actually changed, so
-  <code>git log</code> on that repository is the history. <strong>Changed</strong>
-  below is the date each image last moved.</p>
+  <h1>Os runners do GitHub, como eles realmente são</h1>
+  <p class="lede">Cada imagem de runner abaixo é capturada uma vez por dia com o
+  <a href="https://github.com/nyrvo-dev/nyrvo">Nyrvo</a> e gravada em
+  <a href="https://github.com/nyrvo-dev/nyrvo-runners">um repositório público</a>.
+  Um traço significa que a imagem não traz aquela ferramenta — o que vale saber
+  antes que um workflow assuma que ela está lá. Uma interrogação significa que a
+  sonda não respondeu a tempo: não se sabe se a imagem tem a ferramenta, e isso
+  não é o mesmo que saber que ela não tem.</p>
+  <p class="lede">Um commit só existe quando algo mudou de fato, então o
+  <code>git log</code> daquele repositório é o histórico. <strong>Mudou</strong>
+  abaixo é a data em que cada imagem mudou pela última vez.</p>
 
   <div class="tablewrap">
     <table>
       <thead><tr>
-        <th scope="col">runner</th><th scope="col">os/arch</th>
+        <th scope="col">runner</th><th scope="col">so/arch</th>
         <th scope="col">go</th><th scope="col">node</th><th scope="col">npm</th><th scope="col">python</th><th scope="col">ruby</th><th scope="col">php</th><th scope="col">rust</th><th scope="col">java</th>
-        <th scope="col">docker</th><th scope="col">changed</th>
+        <th scope="col">docker</th><th scope="col">mudou</th>
       </tr></thead>
       <tbody>
 <tr><th scope="row"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/macos-15/current.json">macos-15</a></th><td>darwin/arm64</td><td><span class="none">—</span></td><td>22.23.1</td><td>10.9.8</td><td>3.14.6</td><td>3.3.12</td><td><span class="none">—</span></td><td>1.97.1</td><td>21.0.11</td><td><span class="none">—</span></td><td class="date">2026-08-17</td></tr>
@@ -92,17 +92,16 @@ footer a{text-decoration:none}
     </table>
   </div>
 
-  <p class="lede" style="margin-top:24px">Environment variable <em>names</em> are
-  recorded too, in the linked JSON. Their values are not, and never were: Nyrvo
-  does not read them, which is what makes publishing a runner's environment safe
-  at all.</p>
+  <p class="lede" style="margin-top:24px">Os <em>nomes</em> das variáveis de ambiente também são
+  registrados, no JSON linkado. Os valores não são, e nunca foram: o Nyrvo não
+  os lê, e é isso que torna seguro publicar o ambiente de um runner.</p>
 </main>
 <footer><div>
   <a href="https://nyrvo.dev/">nyrvo.dev</a>
-  <a href="https://github.com/nyrvo-dev/nyrvo-runners">Repository</a>
+  <a href="https://github.com/nyrvo-dev/nyrvo-runners">Repositório</a>
   <a href="https://github.com/nyrvo-dev/nyrvo">Nyrvo</a>
   <span>MIT</span>
-  <span>Captured with Nyrvo v0.1.2</span>
+  <span>Capturado com o Nyrvo v0.1.2</span>
 </div></footer>
 </body>
 </html>
