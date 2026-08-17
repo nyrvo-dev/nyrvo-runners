@@ -1,16 +1,8 @@
 {
-  "docker": {
-    "client_version": "28.0.4",
-    "compose_version": "2.38.2",
-    "daemon_running": true,
-    "server_version": "28.0.4"
-  },
   "environment": {
     "names": [
-      "ACCEPT_EULA",
       "ACTIONS_ORCHESTRATION_ID",
       "ACTIONS_RUNNER_ACTION_ARCHIVE_CACHE",
-      "ACTIONS_RUNNER_RETURN_JOB_RESULT_FOR_HOSTED",
       "AGENT_TOOLSDIRECTORY",
       "ANDROID_HOME",
       "ANDROID_NDK",
@@ -18,21 +10,16 @@
       "ANDROID_NDK_LATEST_HOME",
       "ANDROID_NDK_ROOT",
       "ANDROID_SDK_ROOT",
-      "ANT_HOME",
-      "AZURE_EXTENSION_DIR",
+      "BOOTSTRAP_HASKELL_INSTALL_NO_STACK_HOOK",
       "BOOTSTRAP_HASKELL_NONINTERACTIVE",
       "CHROMEWEBDRIVER",
-      "CHROME_BIN",
       "CI",
-      "CONDA",
-      "DEBIAN_FRONTEND",
       "DOTNET_MULTILEVEL_LOOKUP",
       "DOTNET_NOLOGO",
       "DOTNET_SKIP_FIRST_TIME_EXPERIENCE",
       "EDGEWEBDRIVER",
       "ENABLE_RUNNER_TRACING",
       "GECKOWEBDRIVER",
-      "GHCUP_INSTALL_BASE_PREFIX",
       "GITHUB_ACTION",
       "GITHUB_ACTIONS",
       "GITHUB_ACTION_REF",
@@ -72,37 +59,37 @@
       "GITHUB_WORKFLOW_REF",
       "GITHUB_WORKFLOW_SHA",
       "GITHUB_WORKSPACE",
-      "GOROOT_1_24_X64",
-      "GOROOT_1_25_X64",
-      "GOROOT_1_26_X64",
-      "GRADLE_HOME",
-      "HCA_CLOUD_PROVIDER",
+      "GOROOT_1_24_ARM64",
+      "GOROOT_1_25_ARM64",
+      "GOROOT_1_26_ARM64",
       "HOME",
-      "HOMEBREW_CLEANUP_PERIODIC_FULL_DAYS",
+      "HOMEBREW_CASK_OPTS",
+      "HOMEBREW_CELLAR",
       "HOMEBREW_NO_AUTO_UPDATE",
-      "INVOCATION_ID",
+      "HOMEBREW_NO_INSTALL_CLEANUP",
+      "HOMEBREW_PREFIX",
+      "HOMEBREW_REPOSITORY",
+      "INFOPATH",
       "ImageOS",
       "ImageVersion",
       "JAVA_HOME",
-      "JAVA_HOME_11_X64",
-      "JAVA_HOME_17_X64",
-      "JAVA_HOME_21_X64",
-      "JAVA_HOME_25_X64",
-      "JAVA_HOME_8_X64",
-      "JOURNAL_STREAM",
+      "JAVA_HOME_11_arm64",
+      "JAVA_HOME_17_arm64",
+      "JAVA_HOME_21_arm64",
+      "JAVA_HOME_25_arm64",
       "LANG",
+      "LC_ALL",
+      "LC_CTYPE",
       "LOGNAME",
-      "MEMORY_PRESSURE_WATCH",
-      "MEMORY_PRESSURE_WRITE",
-      "NVM_DIR",
+      "NUNIT3_PATH",
+      "NUNIT_BASE_PATH",
       "NYRVO_VERSION",
       "OLDPWD",
       "PATH",
       "PIPX_BIN_DIR",
       "PIPX_HOME",
-      "POWERSHELL_DISTRIBUTION_CHANNEL",
-      "PSModulePath",
       "PWD",
+      "RCT_NO_LAUNCH_PACKAGER",
       "RUNNER_ARCH",
       "RUNNER_ENVIRONMENT",
       "RUNNER_NAME",
@@ -111,60 +98,51 @@
       "RUNNER_TOOL_CACHE",
       "RUNNER_TRACKING_ID",
       "RUNNER_WORKSPACE",
-      "SELENIUM_JAR_PATH",
-      "SGX_AESM_ADDR",
       "SHELL",
       "SHLVL",
-      "SWIFT_PATH",
-      "SYSTEMD_EXEC_PID",
+      "SSH_AUTH_SOCK",
+      "TMPDIR",
       "USER",
-      "USE_BAZEL_FALLBACK_VERSION",
       "VCPKG_INSTALLATION_ROOT",
-      "XDG_CONFIG_HOME",
-      "XDG_RUNTIME_DIR",
-      "_"
+      "VM_ASSETS",
+      "XCODE_16_DEVELOPER_DIR",
+      "XCODE_26_DEVELOPER_DIR",
+      "XPC_FLAGS",
+      "XPC_SERVICE_NAME",
+      "_",
+      "__CF_USER_TEXT_ENCODING"
     ]
   },
-  "name": "ubuntu-24.04",
+  "name": "macos-15",
   "runtimes": [
-    {
-      "name": "go",
-      "path": "/usr/bin/go",
-      "version": "1.24.13"
-    },
     {
       "name": "java",
       "path": "/usr/bin/java",
-      "version": "17.0.20"
+      "version": "21.0.11"
     },
     {
       "name": "node",
-      "path": "/usr/local/bin/node",
-      "version": "22.23.2"
+      "path": "/opt/homebrew/bin/node",
+      "version": "22.23.1"
     },
     {
       "name": "npm",
-      "path": "/usr/local/bin/npm",
+      "path": "/opt/homebrew/bin/npm",
       "version": "10.9.8"
     },
     {
-      "name": "php",
-      "path": "/usr/bin/php",
-      "version": "8.3.6"
-    },
-    {
       "name": "python",
-      "path": "/usr/bin/python3",
-      "version": "3.12.3"
+      "path": "/opt/homebrew/bin/python3",
+      "version": "3.14.6"
     },
     {
       "name": "ruby",
-      "path": "/usr/bin/ruby",
-      "version": "3.2.3"
+      "path": "/opt/homebrew/opt/ruby@3.3/bin/ruby",
+      "version": "3.3.12"
     },
     {
       "name": "rust",
-      "path": "/home/runner/.cargo/bin/rustc",
+      "path": "/Users/runner/.cargo/bin/rustc",
       "version": "1.97.1"
     }
   ],
@@ -173,8 +151,8 @@
     "kind": "local"
   },
   "system": {
-    "arch": "amd64",
-    "kernel": "6.17.0-1022-azure",
-    "os": "linux"
+    "arch": "arm64",
+    "kernel": "24.6.0",
+    "os": "darwin"
   }
 }
