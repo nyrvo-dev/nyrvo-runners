@@ -1,0 +1,114 @@
+name: capture
+
+# Once a day, and on demand. The hour is off the top of the hour on purpose:
+# scheduled workflows queue behind everyone else's midnight cron.
+on:
+  schedule:
+    - cron: "17 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  # A run that overlaps another would race on the same branch. Later wins, and
+  # the earlier one is not worth finishing.
+  group: capture
+  cancel-in-progress: true
+
+env:
+  # Pinned deliberately. If the feed tracked the latest Nyrvo, a change in the
+  # tool would look exactly like a change in a runner, and this dataset would
+  # stop meaning what it claims to mean. Bump it in its own commit, so that
+  # commit is the one to blame when every label moves at once.
+  NYRVO_VERSION: v0.1.1
+
+jobs:
+  capture:
+    name: ${{ matrix.label }}
+    runs-on: ${{ matrix.label }}
+    strategy:
+      # One unavailable label must not cost the other five. A retired runner
+      # image is itself a finding, and it should arrive as one missing file
+      # rather than as an empty run.
+      fail-fast: false
+      matrix:
+        label:
+          - ubuntu-latest
+          - ubuntu-24.04
+          - ubuntu-22.04
+          - macos-latest
+          - macos-15
+          - windows-latest
+    steps:
+      - name: Install nyrvo
+        run: go install github.com/nyrvo-dev/nyrvo/cmd/nyrvo@${{ env.NYRVO_VERSION }}
+
+      # Deliberately not in a checkout. A capture describes the directory it
+      # runs in as well as the machine: inside a repository it would record
+      # this repository's own commit and read its files as declared
+      # requirements, so every snapshot would churn on data about itself.
+      # An empty directory yields the runner and nothing else.
+      - name: Capture
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/empty"
+          cd "$RUNNER_TEMP/empty"
+          # A collector that fails is reported on stderr and lands in this log.
+          # The snapshot is still written, and a partial observation of a runner
+          # is worth more than no observation of it.
+          nyrvo capture "${{ matrix.label }}" --json > "$RUNNER_TEMP/snapshot.json" \
+            || echo "::warning::capture reported collector failures for ${{ matrix.label }}"
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: snapshot-${{ matrix.label }}
+          path: ${{ runner.temp }}/snapshot.json
+          if-no-files-found: error
+
+  commit:
+    name: commit what changed
+    needs: capture
+    # Runs even when a label failed, so the labels that did answer are still
+    # recorded. A day with five of six is still a day of evidence.
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: incoming
+          pattern: snapshot-*
+
+      # Every matrix job commits through this one step rather than pushing for
+      # itself. Six jobs racing on one branch is a lost push at best; one
+      # commit a day also makes the git log read as events — "on the 14th,
+      # these three runners moved" — which is the whole product.
+      - name: Normalise and stage
+        run: |
+          set -euo pipefail
+          for dir in incoming/snapshot-*; do
+            label="${dir#incoming/snapshot-}"
+            mkdir -p "data/$label"
+            # created_at is dropped rather than stored. It changes on every run,
+            # so keeping it would produce a commit a day whether or not anything
+            # drifted, and the commit's own date already records when we looked.
+            # Sorted keys keep the diff about the runner, not about jq.
+            jq -S 'del(.created_at)' "$dir/snapshot.json" > "data/$label/current.json"
+          done
+
+      - name: Commit if anything moved
+        run: |
+          set -euo pipefail
+          git config user.name "nyrvo-runners"
+          git config user.email "noreply@nyrvo.dev"
+          git add data
+          if git diff --cached --quiet; then
+            echo "No runner changed today."
+            exit 0
+          fi
+          changed=$(git diff --cached --name-only | sed 's|data/||; s|/current.json||' | paste -sd', ' -)
+          git commit -m "drift: $changed"
+          git push
