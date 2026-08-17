@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GitHub-hosted runners, as they actually are — Nyrvo</title>
+<meta name="description" content="What GitHub Actions runner images actually contain: Go, Node, Python, Ruby, PHP, Rust, Java and Docker versions, captured daily with Nyrvo.">
+<link rel="canonical" href="https://runners.nyrvo.dev/">
+<meta property="og:title" content="GitHub-hosted runners, as they actually are">
+<meta property="og:description" content="What GitHub Actions runner images actually contain, captured daily.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%23161826'/%3E%3Crect x='4' y='4' width='8' height='8' rx='2' fill='%239184d9'/%3E%3C/svg%3E">
+<style>
+/* Same rule as nyrvo.dev: nothing is loaded from anyone else. */
+:root{
+  --bg:#161826; --surface:#232532; --text:#e9e9ed; --accent:#9184d9;
+  --divider:color-mix(in srgb, #e9e9ed 16%, transparent); --dim:#9397ab;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --body:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme: light){
+  :root{ --bg:#f3f5fe; --surface:#e4e7f5; --text:#292b31; --accent:#5d5294;
+    --divider:color-mix(in srgb, #292b31 18%, transparent); --dim:#75798c; }
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:48px 24px}
+a{color:var(--accent);text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1{font-size:clamp(26px,4vw,38px);letter-spacing:-0.02em;line-height:1.1;margin:0 0 16px;font-weight:500}
+.lede{max-width:64ch;line-height:1.65;text-wrap:pretty;color:color-mix(in srgb, var(--text) 80%, transparent);margin:0 0 10px}
+.brand{font-family:var(--mono);font-size:15px;text-decoration:none;color:var(--text);display:inline-flex;align-items:center;gap:9px;margin-bottom:28px}
+.brand span{width:9px;height:9px;background:var(--accent);display:block;border-radius:2px}
+.tablewrap{margin-top:32px;overflow-x:auto;border:1px solid var(--divider);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:13px;white-space:nowrap}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--divider)}
+thead th{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);font-weight:400}
+tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
+tbody th{font-weight:500}
+tbody th a{text-decoration:none}
+.none{color:var(--dim)}
+.date{color:var(--dim)}
+footer{border-top:1px solid var(--divider);margin-top:48px}
+footer div{max-width:1180px;margin:0 auto;padding:24px;display:flex;flex-wrap:wrap;gap:16px 24px;font-size:13px;color:var(--dim)}
+footer a{text-decoration:none}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <a class="brand" href="https://nyrvo.dev/"><span></span>nyrvo</a>
+  <h1>GitHub-hosted runners, as they actually are</h1>
+  <p class="lede">Every runner image below is captured once a day with
+  <a href="https://github.com/nyrvo-dev/nyrvo">Nyrvo</a> and committed to
+  <a href="https://github.com/nyrvo-dev/nyrvo-runners">a public repository</a>.
+  A dash means the image does not carry that tool at all — which is worth
+  knowing before a workflow assumes it does.</p>
+  <p class="lede">A commit exists only when something actually changed, so
+  <code>git log</code> on that repository is the history. <strong>Changed</strong>
+  below is the date each image last moved.</p>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr>
+        <th scope="col">runner</th><th scope="col">os/arch</th>
+        <th scope="col">go</th><th scope="col">node</th><th scope="col">npm</th><th scope="col">python</th><th scope="col">ruby</th><th scope="col">php</th><th scope="col">rust</th><th scope="col">java</th>
+        <th scope="col">docker</th><th scope="col">changed</th>
+      </tr></thead>
+      <tbody>
+<tr><th scope="row"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/macos-15/current.json">macos-15</a></th><td>darwin/arm64</td><td><span class="none">—</span></td><td>22.23.1</td><td>10.9.8</td><td>3.14.6</td><td>3.3.12</td><td><span class="none">—</span></td><td>1.97.1</td><td>21.0.11</td><td><span class="none">—</span></td><td class="date">2026-08-17</td></tr>
+<tr><th scope="row"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/macos-latest/current.json">macos-latest</a></th><td>darwin/arm64</td><td><span class="none">—</span></td><td>24.18.0</td><td>11.16.0</td><td>3.14.6</td><td>3.4.10</td><td><span class="none">—</span></td><td>1.97.1</td><td>21.0.11</td><td><span class="none">—</span></td><td class="date">2026-08-17</td></tr>
+<tr><th scope="row"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/ubuntu-22.04/current.json">ubuntu-22.04</a></th><td>linux/amd64</td><td>1.24.13</td><td>22.23.2</td><td>10.9.8</td><td>3.10.12</td><td>3.0.2</td><td>8.1.2</td><td>1.97.1</td><td>11.0.32</td><td>28.0.4</td><td class="date">2026-08-17</td></tr>
+<tr><th scope="row"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/ubuntu-24.04/current.json">ubuntu-24.04</a></th><td>linux/amd64</td><td>1.24.13</td><td>22.23.2</td><td>10.9.8</td><td>3.12.3</td><td>3.2.3</td><td>8.3.6</td><td>1.97.1</td><td>17.0.20</td><td>28.0.4</td><td class="date">2026-08-17</td></tr>
+<tr><th scope="row"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/ubuntu-latest/current.json">ubuntu-latest</a></th><td>linux/amd64</td><td>1.24.13</td><td>22.23.2</td><td>10.9.8</td><td>3.12.3</td><td>3.2.3</td><td>8.3.6</td><td>1.97.1</td><td>17.0.20</td><td>28.0.4</td><td class="date">2026-08-17</td></tr>
+<tr><th scope="row"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/windows-latest/current.json">windows-latest</a></th><td>windows/amd64</td><td>1.24.13</td><td>22.23.2</td><td>10.9.8</td><td>3.12.10</td><td>3.3.12</td><td>8.5.9</td><td>1.97.1</td><td>17.0.20</td><td>29.1.5</td><td class="date">2026-08-17</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="lede" style="margin-top:24px">Environment variable <em>names</em> are
+  recorded too, in the linked JSON. Their values are not, and never were: Nyrvo
+  does not read them, which is what makes publishing a runner's environment safe
+  at all.</p>
+</main>
+<footer><div>
+  <a href="https://nyrvo.dev/">nyrvo.dev</a>
+  <a href="https://github.com/nyrvo-dev/nyrvo-runners">Repository</a>
+  <a href="https://github.com/nyrvo-dev/nyrvo">Nyrvo</a>
+  <span>MIT</span>
+  <span>Captured with Nyrvo v0.1.1</span>
+</div></footer>
+</body>
+</html>

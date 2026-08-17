@@ -134,6 +134,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # The rendered page dates each runner from its file's last commit, so
+          # a shallow clone would report every image as changing today.
+          fetch-depth: 0
 
       - uses: actions/download-artifact@v4
         with:
@@ -157,12 +161,18 @@ jobs:
             jq -S 'del(.created_at)' "$dir/snapshot.json" > "data/$label/current.json"
           done
 
+      # The page is regenerated on every run, but it only reaches a commit when
+      # a snapshot moved — the git status check below covers both. "Changed" on
+      # the page reads the commit dates, so it needs the full history.
+      - name: Render the page
+        run: python3 tools/render.py "${{ env.NYRVO_VERSION }}"
+
       - name: Commit if anything moved
         run: |
           set -euo pipefail
           git config user.name "nyrvo-runners"
           git config user.email "noreply@nyrvo.dev"
-          git add data
+          git add data docs
           if git diff --cached --quiet; then
             echo "No runner changed today."
             exit 0
@@ -171,7 +181,15 @@ jobs:
           # delimiters, not as one separator, which is how the first run
           # produced "a,b c,d".
           changed=$(git diff --cached --name-only \
+            | { grep '^data/' || true; } \
             | sed 's|data/||; s|/current.json||' \
-            | sort | paste -sd, - | sed 's/,/, /g')
-          git commit -m "drift: $changed"
+            | sort -u | paste -sd, - | sed 's/,/, /g')
+          # Only the page moved: the template or the renderer changed, and no
+          # runner did. Saying "drift:" with nothing after it would misreport
+          # that as an image having moved.
+          if [ -z "$changed" ]; then
+            git commit -m "chore: regenerate the page"
+          else
+            git commit -m "drift: $changed"
+          fi
           git push
