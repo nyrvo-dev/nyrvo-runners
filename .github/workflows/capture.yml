@@ -24,8 +24,53 @@ env:
   NYRVO_VERSION: v0.1.1
 
 jobs:
+  # Nyrvo is compiled once, here, and shipped to the runners as a binary.
+  #
+  # The obvious alternative — `go install` on each runner — does not work and
+  # should not be made to work. The macOS images ship no Go at all, so it would
+  # need actions/setup-go, and then every macOS snapshot would report the Go
+  # version this workflow chose rather than the one the image carries. The
+  # instrument would be altering what it measures. Cross-compiling keeps every
+  # measured machine free of any toolchain we brought with us.
+  build:
+    name: build nyrvo ${{ env.NYRVO_VERSION }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+
+      - name: Cross-compile
+        run: |
+          set -euo pipefail
+          mkdir -p "$GITHUB_WORKSPACE/bin"
+          # A throwaway module pinned to the release, then `go build -o`, which
+          # says where the binary goes. `go install` decides that for itself and
+          # moves cross-compiled output into GOPATH/bin/<goos>_<goarch>, so a
+          # script that guesses the path is one Go release away from silently
+          # producing nothing.
+          mkdir -p /tmp/src && cd /tmp/src
+          go mod init nyrvo-runners-build >/dev/null
+          go get github.com/nyrvo-dev/nyrvo/cmd/nyrvo@${{ env.NYRVO_VERSION }}
+          build() {
+            GOOS=$1 GOARCH=$2 go build -trimpath \
+              -o "$GITHUB_WORKSPACE/bin/nyrvo-$1-$2$3" \
+              github.com/nyrvo-dev/nyrvo/cmd/nyrvo
+          }
+          build linux amd64 ""
+          build darwin arm64 ""
+          build windows amd64 ".exe"
+          ls -l "$GITHUB_WORKSPACE/bin"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nyrvo-binaries
+          path: bin/
+          if-no-files-found: error
+
   capture:
     name: ${{ matrix.label }}
+    needs: build
     runs-on: ${{ matrix.label }}
     strategy:
       # One unavailable label must not cost the other five. A retired runner
@@ -33,16 +78,28 @@ jobs:
       # rather than as an empty run.
       fail-fast: false
       matrix:
-        label:
-          - ubuntu-latest
-          - ubuntu-24.04
-          - ubuntu-22.04
-          - macos-latest
-          - macos-15
-          - windows-latest
+        include:
+          - label: ubuntu-latest
+            bin: nyrvo-linux-amd64
+          - label: ubuntu-24.04
+            bin: nyrvo-linux-amd64
+          - label: ubuntu-22.04
+            bin: nyrvo-linux-amd64
+          - label: macos-latest
+            bin: nyrvo-darwin-arm64
+          - label: macos-15
+            bin: nyrvo-darwin-arm64
+          - label: windows-latest
+            bin: nyrvo-windows-amd64.exe
     steps:
-      - name: Install nyrvo
-        run: go install github.com/nyrvo-dev/nyrvo/cmd/nyrvo@${{ env.NYRVO_VERSION }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: nyrvo-binaries
+          path: ${{ runner.temp }}/bin
+
+      - name: Make it runnable
+        shell: bash
+        run: chmod +x "$RUNNER_TEMP/bin/${{ matrix.bin }}"
 
       # Deliberately not in a checkout. A capture describes the directory it
       # runs in as well as the machine: inside a repository it would record
@@ -57,7 +114,8 @@ jobs:
           # A collector that fails is reported on stderr and lands in this log.
           # The snapshot is still written, and a partial observation of a runner
           # is worth more than no observation of it.
-          nyrvo capture "${{ matrix.label }}" --json > "$RUNNER_TEMP/snapshot.json" \
+          "$RUNNER_TEMP/bin/${{ matrix.bin }}" capture "${{ matrix.label }}" --json \
+            > "$RUNNER_TEMP/snapshot.json" \
             || echo "::warning::capture reported collector failures for ${{ matrix.label }}"
 
       - name: Upload
