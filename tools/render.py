@@ -67,7 +67,24 @@ def last_changed(label):
         return "—"
 
 
-def cell(value):
+UNKNOWN = ('<span class="unknown" title="not measured: the probe did not answer'
+           ' in time">?</span>')
+
+
+def cell(value, unknown=False):
+    """A value, or a marker saying which kind of nothing this is.
+
+    An empty value is an absence Nyrvo observed; `unknown` says the probe never
+    answered, so the absence was never observed at all. Reporting the second as
+    the first is the untruth this argument exists to stop.
+
+    `unknown` wins over any value that came with it. A snapshot that names a key
+    as unmeasured is saying that key was not measured, whatever else the file
+    carries for it, and printing that leftover as a reading would be the same
+    kind of claim this is here to stop making.
+    """
+    if unknown:
+        return UNKNOWN
     return html.escape(value) if value else '<span class="none">—</span>'
 
 
@@ -76,19 +93,34 @@ def render_rows(rows):
     for label, snap in rows:
         system = snap.get("system") or {}
         versions = {r["name"]: r.get("version", "") for r in snap.get("runtimes", [])}
+        # "<component>.<key>" entries the capture could not measure. Optional and
+        # usually absent: a snapshot without it is one where everything answered.
+        unmeasured = set(snap.get("unmeasured") or [])
         docker = snap.get("docker") or {}
         docker_text = ""
         if docker:
             docker_text = docker.get("server_version") or docker.get("client_version") or ""
             if docker_text and not docker.get("daemon_running"):
                 docker_text += " (no daemon)"
+        # This column shows the server version, falling back to the client's, so
+        # it is unknown when whichever one would have filled it went unmeasured.
+        # daemon_running is in the set because the cell also reports "(no
+        # daemon)": that is a bool with no third state, so an unread probe leaves
+        # a confident false behind, and printing it would state the daemon is
+        # down on a machine that was never asked.
+        docker_unknown = bool(unmeasured & {
+            "docker.server_version", "docker.client_version", "docker.daemon_running"})
 
-        cells = "".join(f"<td>{cell(versions.get(name, ''))}</td>" for name in RUNTIMES)
+        cells = "".join(
+            f"<td>{cell(versions.get(name, ''), f'runtime.{name}' in unmeasured)}</td>"
+            for name in RUNTIMES
+        )
         out.append(
             f'<tr><th scope="row"><a href="https://github.com/nyrvo-dev/nyrvo-runners'
             f'/blob/main/data/{html.escape(label)}/current.json">{html.escape(label)}</a></th>'
-            f"<td>{cell(system.get('os'))}/{cell(system.get('arch'))}</td>"
-            f"{cells}<td>{cell(docker_text)}</td>"
+            f"<td>{cell(system.get('os'), 'system.os' in unmeasured)}"
+            f"/{cell(system.get('arch'), 'system.arch' in unmeasured)}</td>"
+            f"{cells}<td>{cell(docker_text, docker_unknown)}</td>"
             f'<td class="date">{cell(last_changed(label))}</td></tr>'
         )
     return "\n".join(out)
@@ -135,6 +167,7 @@ tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
 tbody th{font-weight:500}
 tbody th a{text-decoration:none}
 .none{color:var(--dim)}
+.unknown{color:var(--dim);cursor:help}
 .date{color:var(--dim)}
 footer{border-top:1px solid var(--divider);margin-top:48px}
 footer div{max-width:1180px;margin:0 auto;padding:24px;display:flex;flex-wrap:wrap;gap:16px 24px;font-size:13px;color:var(--dim)}
@@ -149,7 +182,9 @@ footer a{text-decoration:none}
   <a href="https://github.com/nyrvo-dev/nyrvo">Nyrvo</a> and committed to
   <a href="https://github.com/nyrvo-dev/nyrvo-runners">a public repository</a>.
   A dash means the image does not carry that tool at all — which is worth
-  knowing before a workflow assumes it does.</p>
+  knowing before a workflow assumes it does. A question mark means the probe
+  did not answer in time, so whether the image carries that tool is unknown
+  rather than ruled out.</p>
   <p class="lede">A commit exists only when something actually changed, so
   <code>git log</code> on that repository is the history. <strong>Changed</strong>
   below is the date each image last moved.</p>
