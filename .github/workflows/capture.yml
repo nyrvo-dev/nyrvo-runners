@@ -33,7 +33,7 @@ jobs:
   # instrument would be altering what it measures. Cross-compiling keeps every
   # measured machine free of any toolchain we brought with us.
   build:
-    name: build nyrvo ${{ env.NYRVO_VERSION }}
+    name: build nyrvo
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-go@v5
@@ -167,6 +167,11 @@ jobs:
             echo "No runner changed today."
             exit 0
           fi
-          changed=$(git diff --cached --name-only | sed 's|data/||; s|/current.json||' | paste -sd', ' -)
+          # paste -sd', ' would use the comma and the space as two alternating
+          # delimiters, not as one separator, which is how the first run
+          # produced "a,b c,d".
+          changed=$(git diff --cached --name-only \
+            | sed 's|data/||; s|/current.json||' \
+            | sort | paste -sd, - | sed 's/,/, /g')
           git commit -m "drift: $changed"
           git push
