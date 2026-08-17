@@ -1,8 +1,7 @@
 {
   "docker": {
     "client_version": "29.1.5",
-    "daemon_running": true,
-    "server_version": "29.1.5"
+    "daemon_running": false
   },
   "environment": {
     "names": [
