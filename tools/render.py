@@ -88,6 +88,33 @@ def cell(value, unknown=False):
     return html.escape(value) if value else '<span class="none">—</span>'
 
 
+def docker_cell(docker, unmeasured):
+    """The container tooling column: engine version, then compose.
+
+    Compose gets its own half of the cell rather than being left to the linked
+    JSON. It is the piece a compose-backed test suite actually depends on, and
+    "this image ships no compose" is exactly the assumption a workflow makes
+    wrongly. An absent compose is therefore printed as a dash rather than
+    omitted, because a cell that simply stops after the engine version says
+    nothing about whether the question was asked.
+
+    daemon_running is treated as part of the engine reading: it is a bool with
+    no third state, so a probe that ran out of time leaves a confident false
+    behind, and "(no daemon)" would report a machine that was never asked as
+    one whose daemon is down.
+    """
+    if not docker:
+        return cell("")
+    engine_unknown = bool(unmeasured & {
+        "docker.server_version", "docker.client_version", "docker.daemon_running"})
+    engine = docker.get("server_version") or docker.get("client_version") or ""
+    if engine and not engine_unknown and not docker.get("daemon_running"):
+        engine += " (no daemon)"
+    compose = cell(docker.get("compose_version", ""),
+                   "docker.compose_version" in unmeasured)
+    return f"{cell(engine, engine_unknown)} · compose {compose}"
+
+
 def render_rows(rows):
     out = []
     for label, snap in rows:
@@ -96,20 +123,6 @@ def render_rows(rows):
         # "<component>.<key>" entries the capture could not measure. Optional and
         # usually absent: a snapshot without it is one where everything answered.
         unmeasured = set(snap.get("unmeasured") or [])
-        docker = snap.get("docker") or {}
-        docker_text = ""
-        if docker:
-            docker_text = docker.get("server_version") or docker.get("client_version") or ""
-            if docker_text and not docker.get("daemon_running"):
-                docker_text += " (no daemon)"
-        # This column shows the server version, falling back to the client's, so
-        # it is unknown when whichever one would have filled it went unmeasured.
-        # daemon_running is in the set because the cell also reports "(no
-        # daemon)": that is a bool with no third state, so an unread probe leaves
-        # a confident false behind, and printing it would state the daemon is
-        # down on a machine that was never asked.
-        docker_unknown = bool(unmeasured & {
-            "docker.server_version", "docker.client_version", "docker.daemon_running"})
 
         cells = "".join(
             f"<td>{cell(versions.get(name, ''), f'runtime.{name}' in unmeasured)}</td>"
@@ -120,7 +133,7 @@ def render_rows(rows):
             f'/blob/main/data/{html.escape(label)}/current.json">{html.escape(label)}</a></th>'
             f"<td>{cell(system.get('os'), 'system.os' in unmeasured)}"
             f"/{cell(system.get('arch'), 'system.arch' in unmeasured)}</td>"
-            f"{cells}<td>{cell(docker_text, docker_unknown)}</td>"
+            f"{cells}<td>{docker_cell(snap.get('docker') or {}, unmeasured)}</td>"
             f'<td class="date">{cell(last_changed(label))}</td></tr>'
         )
     return "\n".join(out)
