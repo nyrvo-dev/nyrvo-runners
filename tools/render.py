@@ -24,7 +24,7 @@ OUT = ROOT / "docs" / "index.html"
 # The order runtimes appear in the table. Fixed rather than derived from the
 # data, so a runner that lacks one shows a gap in the same column as every
 # other runner rather than shifting the table around.
-RUNTIMES = ["go", "node", "npm", "python", "ruby", "php", "rust", "java"]
+RUNTIMES = ["go", "node", "npm", "python", "ruby", "php", "rust", "java", "dotnet"]
 
 
 def load():
@@ -88,7 +88,8 @@ COPY = {
   A dash means the image does not carry that tool at all — which is worth
   knowing before a workflow assumes it does. A question mark means the probe
   did not answer in time, so whether the image carries that tool is unknown
-  rather than ruled out.""",
+  rather than ruled out. An exclamation mark means the tool is installed but
+  would not report its version, which is not the same as not having it.""",
         "lede2": """A commit exists only when something actually changed, so
   <code>git log</code> on that repository is the history. <strong>Changed</strong>
   below is the date each image last moved.""",
@@ -99,6 +100,7 @@ COPY = {
         "col_runner": "runner", "col_osarch": "os/arch",
         "col_docker": "docker", "col_changed": "changed",
         "unknown_title": "not measured: the probe did not answer in time",
+        "unusable_title": "installed, but would not report a version",
         "repository": "Repository",
         "captured_with": "Captured with Nyrvo",
     },
@@ -114,7 +116,9 @@ COPY = {
   Um traço significa que a imagem não traz aquela ferramenta — o que vale saber
   antes que um workflow assuma que ela está lá. Uma interrogação significa que a
   sonda não respondeu a tempo: não se sabe se a imagem tem a ferramenta, e isso
-  não é o mesmo que saber que ela não tem.""",
+  não é o mesmo que saber que ela não tem. Uma exclamação significa que a
+  ferramenta está instalada mas não informou a versão — o que também não é o
+  mesmo que não tê-la.""",
         "lede2": """Um commit só existe quando algo mudou de fato, então o
   <code>git log</code> daquele repositório é o histórico. <strong>Mudou</strong>
   abaixo é a data em que cada imagem mudou pela última vez.""",
@@ -126,31 +130,44 @@ COPY = {
         "col_runner": "runner", "col_osarch": "so/arch",
         "col_docker": "docker", "col_changed": "mudou",
         "unknown_title": "não medido: a sonda não respondeu a tempo",
+        "unusable_title": "instalado, mas não informou a versão",
         "repository": "Repositório",
         "captured_with": "Capturado com o Nyrvo",
     },
 }
 
 
-def cell(value, copy, unknown=False):
+def cell(value, copy, unknown=False, unusable=False):
     """A value, or a marker saying which kind of nothing this is.
 
-    An empty value is an absence Nyrvo observed; `unknown` says the probe never
-    answered, so the absence was never observed at all. Reporting the second as
-    the first is the untruth this argument exists to stop.
+    There are three kinds, and collapsing any two of them is a lie about a real
+    machine:
 
-    `unknown` wins over any value that came with it. A snapshot that names a key
-    as unmeasured is saying that key was not measured, whatever else the file
-    carries for it, and printing that leftover as a reading would be the same
-    kind of claim this is here to stop making.
+    An empty value is an absence Nyrvo observed — it looked, and the tool is not
+    there. `unknown` says the probe never answered, so the absence was never
+    observed at all. `unusable` says the binary was found on PATH and refused to
+    report a version, usually because a pinned toolchain names something the
+    image does not have; the tool IS installed.
+
+    Printing an unusable tool as a dash would publish "this image does not have
+    rust" about an image that has rust. This page has already published exactly
+    that kind of claim once, about Docker compose on windows-latest.
+
+    `unknown` wins over `unusable`, and both win over any value that came with
+    them: a probe that never finished cannot also have refused, and a snapshot
+    naming a key in either list is saying that key was not read, whatever else
+    the file carries for it.
     """
     if unknown:
         return (f'<span class="unknown" title="{html.escape(copy["unknown_title"])}">'
                 "?</span>")
+    if unusable:
+        return (f'<span class="unusable" title="{html.escape(copy["unusable_title"])}">'
+                "!</span>")
     return html.escape(value) if value else '<span class="none">—</span>'
 
 
-def docker_cell(docker, unmeasured, copy):
+def docker_cell(docker, unmeasured, copy, unusable=frozenset()):
     """The container tooling column: engine version, then compose.
 
     Compose gets its own half of the cell rather than being left to the linked
@@ -167,14 +184,18 @@ def docker_cell(docker, unmeasured, copy):
     """
     if not docker:
         return cell("", copy)
-    engine_unknown = bool(unmeasured & {
-        "docker.server_version", "docker.client_version", "docker.daemon_running"})
+    engine_keys = {"docker.server_version", "docker.client_version", "docker.daemon_running"}
+    engine_unknown = bool(unmeasured & engine_keys)
+    engine_unusable = bool(unusable & engine_keys)
     engine = docker.get("server_version") or docker.get("client_version") or ""
-    if engine and not engine_unknown and not docker.get("daemon_running"):
+    # daemon_running is only trustworthy when the engine was actually read: an
+    # unmeasured or refused probe leaves a confident false behind.
+    if engine and not engine_unknown and not engine_unusable and not docker.get("daemon_running"):
         engine += " (no daemon)"
     compose = cell(docker.get("compose_version", ""), copy,
-                   "docker.compose_version" in unmeasured)
-    return f"{cell(engine, copy, engine_unknown)} · compose {compose}"
+                   "docker.compose_version" in unmeasured,
+                   "docker.compose_version" in unusable)
+    return f"{cell(engine, copy, engine_unknown, engine_unusable)} · compose {compose}"
 
 
 def render_rows(rows, copy):
@@ -185,17 +206,21 @@ def render_rows(rows, copy):
         # "<component>.<key>" entries the capture could not measure. Optional and
         # usually absent: a snapshot without it is one where everything answered.
         unmeasured = set(snap.get("unmeasured") or [])
+        # "<component>.<key>" entries whose tool was found and refused to answer.
+        # Also optional, and absent from every snapshot captured before v0.2.0 —
+        # the live data predates the field, so this must never assume it is there.
+        unusable = set(snap.get("unusable") or [])
 
         cells = "".join(
-            f"<td>{cell(versions.get(name, ''), copy, f'runtime.{name}' in unmeasured)}</td>"
+            f"<td>{cell(versions.get(name, ''), copy, f'runtime.{name}' in unmeasured, f'runtime.{name}' in unusable)}</td>"
             for name in RUNTIMES
         )
         out.append(
             f'<tr><th scope="row"><a href="https://github.com/nyrvo-dev/nyrvo-runners'
             f'/blob/main/data/{html.escape(label)}/current.json">{html.escape(label)}</a></th>'
-            f"<td>{cell(system.get('os'), copy, 'system.os' in unmeasured)}"
-            f"/{cell(system.get('arch'), copy, 'system.arch' in unmeasured)}</td>"
-            f"{cells}<td>{docker_cell(snap.get('docker') or {}, unmeasured, copy)}</td>"
+            f"<td>{cell(system.get('os'), copy, 'system.os' in unmeasured, 'system.os' in unusable)}"
+            f"/{cell(system.get('arch'), copy, 'system.arch' in unmeasured, 'system.arch' in unusable)}</td>"
+            f"{cells}<td>{docker_cell(snap.get('docker') or {}, unmeasured, copy, unusable)}</td>"
             f'<td class="date">{cell(last_changed(label), copy)}</td></tr>'
         )
     return "\n".join(out)
@@ -253,6 +278,7 @@ tbody th{font-weight:500}
 tbody th a{text-decoration:none}
 .none{color:var(--dim)}
 .unknown{color:var(--dim);cursor:help}
+.unusable{color:var(--accent);cursor:help}
 .date{color:var(--dim)}
 footer{border-top:1px solid var(--divider);margin-top:48px}
 footer div{max-width:1180px;margin:0 auto;padding:24px;display:flex;flex-wrap:wrap;gap:16px 24px;font-size:13px;color:var(--dim)}
