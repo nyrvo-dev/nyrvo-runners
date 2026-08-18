@@ -116,6 +116,11 @@
   "name": "macos-latest",
   "runtimes": [
     {
+      "name": "dotnet",
+      "path": "/usr/local/bin/dotnet",
+      "version": "10.0.302"
+    },
+    {
       "name": "java",
       "path": "/usr/bin/java",
       "version": "21.0.11"

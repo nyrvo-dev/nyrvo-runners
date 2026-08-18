@@ -2,7 +2,8 @@
   "docker": {
     "client_version": "29.1.5",
     "compose_version": "2.40.3",
-    "daemon_running": false
+    "daemon_running": true,
+    "server_version": "29.1.5"
   },
   "environment": {
     "names": [
@@ -165,6 +166,11 @@
   },
   "name": "windows-latest",
   "runtimes": [
+    {
+      "name": "dotnet",
+      "path": "C:\\Program Files\\dotnet\\dotnet.exe",
+      "version": "10.0.302"
+    },
     {
       "name": "go",
       "path": "C:\\hostedtoolcache\\windows\\go\\1.24.13\\x64\\bin\\go.exe",
