@@ -42,12 +42,20 @@ h1{font-size:clamp(26px,4vw,38px);letter-spacing:-0.02em;line-height:1.1;margin:
 .tablewrap::-webkit-scrollbar{height:8px}
 .tablewrap::-webkit-scrollbar-track{background:transparent}
 .tablewrap::-webkit-scrollbar-thumb{background:color-mix(in srgb, var(--accent) 35%, transparent);border-radius:99px;border:2px solid transparent;background-clip:padding-box}
-table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:13px;white-space:nowrap}
+table{border-collapse:separate;border-spacing:0;width:100%;font-family:var(--mono);font-size:13px;white-space:nowrap}
 th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--divider)}
 thead th{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);font-weight:400}
-tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
+/* The runner column headers are identifiers, so they keep their own case and size. */
+thead th.runner{font-size:12px;letter-spacing:0;text-transform:none;color:var(--text);font-weight:500}
+thead th.runner a{text-decoration:none}
+/* The label column stays put while the runner columns scroll, so the row names
+   remain readable on a narrow screen. Needs an opaque background, or the cells
+   underneath would show through, and the separate border model so the sticky
+   borders move with it. */
+.label{position:sticky;left:0;background:var(--surface);border-right:1px solid var(--divider);z-index:1}
+table>tbody:last-child>tr:last-child th,table>tbody:last-child>tr:last-child td{border-bottom:0}
 tbody th{font-weight:500}
-tbody th a{text-decoration:none}
+tbody tr.group th{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);font-weight:400;background:color-mix(in srgb, var(--text) 6%, transparent)}
 .none{color:var(--dim)}
 .unknown{color:var(--dim);cursor:help}
 .unusable{color:var(--accent);cursor:help}
@@ -79,18 +87,40 @@ footer a{text-decoration:none}
   <div class="tablewrap">
     <table>
       <thead><tr>
-        <th scope="col">runner</th><th scope="col">os/arch</th>
-        <th scope="col">go</th><th scope="col">node</th><th scope="col">npm</th><th scope="col">pnpm</th><th scope="col">yarn</th><th scope="col">python</th><th scope="col">ruby</th><th scope="col">php</th><th scope="col">composer</th><th scope="col">rust</th><th scope="col">java</th><th scope="col">dotnet</th>
-        <th scope="col">docker</th><th scope="col">changed</th>
+        <th scope="col" class="label"></th>
+        <th scope="col" class="runner"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/macos-15/current.json">macos-15</a></th><th scope="col" class="runner"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/macos-latest/current.json">macos-latest</a></th><th scope="col" class="runner"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/ubuntu-22.04/current.json">ubuntu-22.04</a></th><th scope="col" class="runner"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/ubuntu-24.04/current.json">ubuntu-24.04</a></th><th scope="col" class="runner"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/ubuntu-latest/current.json">ubuntu-latest</a></th><th scope="col" class="runner"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/windows-latest/current.json">windows-latest</a></th>
       </tr></thead>
-      <tbody>
-<tr><th scope="row"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/macos-15/current.json">macos-15</a></th><td>darwin/arm64</td><td><span class="none">—</span></td><td>22.23.1</td><td>10.9.8</td><td><span class="none">—</span></td><td>1.22.22</td><td>3.14.6</td><td>3.3.12</td><td><span class="none">—</span></td><td><span class="none">—</span></td><td>1.97.1</td><td>21.0.11</td><td>10.0.302</td><td><span class="none">—</span></td><td class="date">2026-08-19</td></tr>
-<tr><th scope="row"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/macos-latest/current.json">macos-latest</a></th><td>darwin/arm64</td><td><span class="none">—</span></td><td>24.18.0</td><td>11.16.0</td><td><span class="none">—</span></td><td>1.22.22</td><td>3.14.6</td><td>3.4.10</td><td><span class="none">—</span></td><td><span class="none">—</span></td><td>1.97.1</td><td>21.0.11</td><td>10.0.302</td><td><span class="none">—</span></td><td class="date">2026-08-19</td></tr>
-<tr><th scope="row"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/ubuntu-22.04/current.json">ubuntu-22.04</a></th><td>linux/amd64</td><td>1.24.13</td><td>22.23.2</td><td>10.9.8</td><td><span class="none">—</span></td><td>1.22.22</td><td>3.10.12</td><td>3.0.2</td><td>8.1.2</td><td>2.10.2</td><td>1.97.1</td><td>11.0.32</td><td>10.0.302</td><td>28.0.4 · compose 2.38.2</td><td class="date">2026-08-19</td></tr>
-<tr><th scope="row"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/ubuntu-24.04/current.json">ubuntu-24.04</a></th><td>linux/amd64</td><td>1.24.13</td><td>22.23.2</td><td>10.9.8</td><td><span class="none">—</span></td><td>1.22.22</td><td>3.12.3</td><td>3.2.3</td><td>8.3.6</td><td>2.10.2</td><td>1.97.1</td><td>17.0.20</td><td>10.0.302</td><td>28.0.4 · compose 2.38.2</td><td class="date">2026-08-19</td></tr>
-<tr><th scope="row"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/ubuntu-latest/current.json">ubuntu-latest</a></th><td>linux/amd64</td><td>1.24.13</td><td>22.23.2</td><td>10.9.8</td><td><span class="none">—</span></td><td>1.22.22</td><td>3.12.3</td><td>3.2.3</td><td>8.3.6</td><td>2.10.2</td><td>1.97.1</td><td>17.0.20</td><td>10.0.302</td><td>28.0.4 · compose 2.38.2</td><td class="date">2026-08-19</td></tr>
-<tr><th scope="row"><a href="https://github.com/nyrvo-dev/nyrvo-runners/blob/main/data/windows-latest/current.json">windows-latest</a></th><td>windows/amd64</td><td>1.24.13</td><td>22.23.2</td><td>10.9.8</td><td><span class="none">—</span></td><td>1.22.22</td><td>3.12.10</td><td>3.3.12</td><td>8.5.9</td><td>2.10.2</td><td>1.97.1</td><td>17.0.20</td><td>10.0.302</td><td>29.1.5 (no daemon) · compose <span class="unknown" title="not measured: the probe did not answer in time">?</span></td><td class="date">2026-08-19</td></tr>
-      </tbody>
+<tbody>
+<tr class="group"><th scope="rowgroup" colspan="7">system</th></tr>
+<tr><th scope="row" class="label">os/arch</th><td>darwin/arm64</td><td>darwin/arm64</td><td>linux/amd64</td><td>linux/amd64</td><td>linux/amd64</td><td>windows/amd64</td></tr>
+</tbody>
+<tbody>
+<tr class="group"><th scope="rowgroup" colspan="7">runtimes</th></tr>
+<tr><th scope="row" class="label">go</th><td><span class="none">—</span></td><td><span class="none">—</span></td><td>1.24.13</td><td>1.24.13</td><td>1.24.13</td><td>1.24.13</td></tr>
+<tr><th scope="row" class="label">node</th><td>22.23.1</td><td>24.18.0</td><td>22.23.2</td><td>22.23.2</td><td>22.23.2</td><td>22.23.2</td></tr>
+<tr><th scope="row" class="label">python</th><td>3.14.6</td><td>3.14.6</td><td>3.10.12</td><td>3.12.3</td><td>3.12.3</td><td>3.12.10</td></tr>
+<tr><th scope="row" class="label">ruby</th><td>3.3.12</td><td>3.4.10</td><td>3.0.2</td><td>3.2.3</td><td>3.2.3</td><td>3.3.12</td></tr>
+<tr><th scope="row" class="label">php</th><td><span class="none">—</span></td><td><span class="none">—</span></td><td>8.1.2</td><td>8.3.6</td><td>8.3.6</td><td>8.5.9</td></tr>
+<tr><th scope="row" class="label">rust</th><td>1.97.1</td><td>1.97.1</td><td>1.97.1</td><td>1.97.1</td><td>1.97.1</td><td>1.97.1</td></tr>
+<tr><th scope="row" class="label">java</th><td>21.0.11</td><td>21.0.11</td><td>11.0.32</td><td>17.0.20</td><td>17.0.20</td><td>17.0.20</td></tr>
+<tr><th scope="row" class="label">dotnet</th><td>10.0.302</td><td>10.0.302</td><td>10.0.302</td><td>10.0.302</td><td>10.0.302</td><td>10.0.302</td></tr>
+</tbody>
+<tbody>
+<tr class="group"><th scope="rowgroup" colspan="7">package managers</th></tr>
+<tr><th scope="row" class="label">npm</th><td>10.9.8</td><td>11.16.0</td><td>10.9.8</td><td>10.9.8</td><td>10.9.8</td><td>10.9.8</td></tr>
+<tr><th scope="row" class="label">pnpm</th><td><span class="none">—</span></td><td><span class="none">—</span></td><td><span class="none">—</span></td><td><span class="none">—</span></td><td><span class="none">—</span></td><td><span class="none">—</span></td></tr>
+<tr><th scope="row" class="label">yarn</th><td>1.22.22</td><td>1.22.22</td><td>1.22.22</td><td>1.22.22</td><td>1.22.22</td><td>1.22.22</td></tr>
+<tr><th scope="row" class="label">composer</th><td><span class="none">—</span></td><td><span class="none">—</span></td><td>2.10.2</td><td>2.10.2</td><td>2.10.2</td><td>2.10.2</td></tr>
+</tbody>
+<tbody>
+<tr class="group"><th scope="rowgroup" colspan="7">containers</th></tr>
+<tr><th scope="row" class="label">docker engine</th><td><span class="none">—</span></td><td><span class="none">—</span></td><td>28.0.4</td><td>28.0.4</td><td>28.0.4</td><td>29.1.5 (no daemon)</td></tr>
+<tr><th scope="row" class="label">docker compose</th><td><span class="none">—</span></td><td><span class="none">—</span></td><td>2.38.2</td><td>2.38.2</td><td>2.38.2</td><td><span class="unknown" title="not measured: the probe did not answer in time">?</span></td></tr>
+</tbody>
+<tbody>
+<tr class="group"><th scope="rowgroup" colspan="7">changed</th></tr>
+<tr><th scope="row" class="label">changed</th><td class="date">2026-08-19</td><td class="date">2026-08-19</td><td class="date">2026-08-19</td><td class="date">2026-08-19</td><td class="date">2026-08-19</td><td class="date">2026-08-19</td></tr>
+</tbody>
     </table>
   </div>
 
