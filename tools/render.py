@@ -24,7 +24,7 @@ OUT = ROOT / "docs" / "index.html"
 # The order runtimes appear in the table. Fixed rather than derived from the
 # data, so a runner that lacks one shows a gap in the same column as every
 # other runner rather than shifting the table around.
-RUNTIMES = ["go", "node", "npm", "python", "ruby", "php", "rust", "java", "dotnet"]
+RUNTIMES = ["go", "node", "npm", "pnpm", "yarn", "python", "ruby", "php", "rust", "java", "dotnet"]
 
 
 def load():
