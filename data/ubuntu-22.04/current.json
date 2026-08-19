@@ -130,7 +130,7 @@
     {
       "name": "dotnet",
       "path": "/usr/bin/dotnet",
-      "version": "10.0.302"
+      "version": "10.0.400"
     },
     {
       "name": "go",
@@ -171,6 +171,11 @@
       "name": "rust",
       "path": "/home/runner/.cargo/bin/rustc",
       "version": "1.97.1"
+    },
+    {
+      "name": "yarn",
+      "path": "/usr/local/bin/yarn",
+      "version": "1.22.22"
     }
   ],
   "schema_version": 1,

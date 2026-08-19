@@ -207,9 +207,9 @@
       "version": "3.3.12"
     },
     {
-      "name": "rust",
-      "path": "C:\\Users\\runneradmin\\.cargo\\bin\\rustc.exe",
-      "version": "1.97.1"
+      "name": "yarn",
+      "path": "C:\\npm\\prefix\\yarn.cmd",
+      "version": "1.22.22"
     }
   ],
   "schema_version": 1,
@@ -220,5 +220,8 @@
     "arch": "amd64",
     "kernel": "3.6.9-b4195d69.x86_64",
     "os": "windows"
-  }
+  },
+  "unmeasured": [
+    "runtime.rust"
+  ]
 }
