@@ -100,11 +100,9 @@ COPY = {
         "lede1": """Every runner image below is captured once a day with
   <a href="https://github.com/nyrvo-dev/nyrvo">Nyrvo</a> and committed to
   <a href="https://github.com/nyrvo-dev/nyrvo-runners">a public repository</a>.
-  A dash means the image does not carry that tool at all — which is worth
-  knowing before a workflow assumes it does. A question mark means the probe
-  did not answer in time, so whether the image carries that tool is unknown
-  rather than ruled out. An exclamation mark means the tool is installed but
-  would not report its version, which is not the same as not having it.""",
+  What each mark in the table means is spelled out beneath it: the three kinds
+  of "no version here" are different facts about a machine, and a workflow that
+  treats them alike is the reason this page exists.""",
         "lede2": """A commit exists only when something actually changed, so
   <code>git log</code> on that repository is the history. <strong>Changed</strong>
   below is the date each image last moved.""",
@@ -124,6 +122,9 @@ COPY = {
         "row_docker_engine": "docker engine", "row_docker_compose": "docker compose",
         "unknown_title": "not measured: the probe did not answer in time",
         "unusable_title": "installed, but would not report a version",
+        "legend_none": "the image does not carry that tool",
+        "legend_unknown": "the probe did not answer in time, so this is unknown rather than ruled out",
+        "legend_unusable": "installed, but would not report a version",
         "repository": "Repository",
         "captured_with": "Captured with Nyrvo",
     },
@@ -136,12 +137,9 @@ COPY = {
         "lede1": """Cada imagem de runner abaixo é capturada uma vez por dia com o
   <a href="https://github.com/nyrvo-dev/nyrvo">Nyrvo</a> e gravada em
   <a href="https://github.com/nyrvo-dev/nyrvo-runners">um repositório público</a>.
-  Um traço significa que a imagem não traz aquela ferramenta — o que vale saber
-  antes que um workflow assuma que ela está lá. Uma interrogação significa que a
-  sonda não respondeu a tempo: não se sabe se a imagem tem a ferramenta, e isso
-  não é o mesmo que saber que ela não tem. Uma exclamação significa que a
-  ferramenta está instalada mas não informou a versão — o que também não é o
-  mesmo que não tê-la.""",
+  O que cada marca da tabela significa está logo abaixo dela: os três tipos de
+  "sem versão aqui" são fatos diferentes sobre uma máquina, e tratar todos como
+  iguais é justamente o motivo desta página existir.""",
         "lede2": """Um commit só existe quando algo mudou de fato, então o
   <code>git log</code> daquele repositório é o histórico. <strong>Mudou</strong>
   abaixo é a data em que cada imagem mudou pela última vez.""",
@@ -160,6 +158,9 @@ COPY = {
         "row_docker_engine": "docker engine", "row_docker_compose": "docker compose",
         "unknown_title": "não medido: a sonda não respondeu a tempo",
         "unusable_title": "instalado, mas não informou a versão",
+        "legend_none": "a imagem não traz aquela ferramenta",
+        "legend_unknown": "a sonda não respondeu a tempo: não se sabe, e isso não é o mesmo que não ter",
+        "legend_unusable": "instalado, mas não informou a versão",
         "repository": "Repositório",
         "captured_with": "Capturado com o Nyrvo",
     },
@@ -335,6 +336,10 @@ h1{font-size:clamp(26px,4vw,38px);letter-spacing:-0.02em;line-height:1.1;margin:
 .topbar{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:28px}
 .topbar .brand{margin-bottom:0}
 .langlink{font-family:var(--mono);font-size:13px;text-decoration:none}
+.legend{margin:16px 0 0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:baseline;
+  font-size:14px;color:var(--dim)}
+.legend dt{text-align:center;min-width:1.5em}
+.legend dd{margin:0}
 .tablewrap{margin-top:32px;overflow-x:auto;border:1px solid var(--divider);border-radius:8px;background:var(--surface);
   scrollbar-width:thin;scrollbar-color:color-mix(in srgb, var(--accent) 45%, transparent) transparent}
 .tablewrap::-webkit-scrollbar{height:8px}
@@ -383,6 +388,12 @@ __GROUPS__
     </table>
   </div>
 
+  <dl class="legend">
+    <dt><span class="none">&mdash;</span></dt><dd>__LEGEND_NONE__</dd>
+    <dt><span class="unknown">?</span></dt><dd>__LEGEND_UNKNOWN__</dd>
+    <dt><span class="unusable">!</span></dt><dd>__LEGEND_UNUSABLE__</dd>
+  </dl>
+
   <p class="lede" style="margin-top:24px">__ENVNOTE__</p>
 </main>
 <footer><div>
@@ -414,6 +425,9 @@ def render_page(rows, copy, version):
         "__TITLE__": copy["title"], "__DESCRIPTION__": copy["description"],
         "__OGDESC__": copy["og_description"], "__H1__": copy["h1"],
         "__LEDE1__": copy["lede1"], "__LEDE2__": copy["lede2"],
+        "__LEGEND_NONE__": html.escape(copy["legend_none"]),
+        "__LEGEND_UNKNOWN__": html.escape(copy["legend_unknown"]),
+        "__LEGEND_UNUSABLE__": html.escape(copy["legend_unusable"]),
         "__ENVNOTE__": copy["env_note"],
         "__REPOSITORY__": copy["repository"], "__CAPTUREDWITH__": copy["captured_with"],
         "__HEADERS__": headers, "__GROUPS__": render_groups(rows, copy),

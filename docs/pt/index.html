@@ -37,6 +37,10 @@ h1{font-size:clamp(26px,4vw,38px);letter-spacing:-0.02em;line-height:1.1;margin:
 .topbar{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:28px}
 .topbar .brand{margin-bottom:0}
 .langlink{font-family:var(--mono);font-size:13px;text-decoration:none}
+.legend{margin:16px 0 0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:baseline;
+  font-size:14px;color:var(--dim)}
+.legend dt{text-align:center;min-width:1.5em}
+.legend dd{margin:0}
 .tablewrap{margin-top:32px;overflow-x:auto;border:1px solid var(--divider);border-radius:8px;background:var(--surface);
   scrollbar-width:thin;scrollbar-color:color-mix(in srgb, var(--accent) 45%, transparent) transparent}
 .tablewrap::-webkit-scrollbar{height:8px}
@@ -75,12 +79,9 @@ footer a{text-decoration:none}
   <p class="lede">Cada imagem de runner abaixo é capturada uma vez por dia com o
   <a href="https://github.com/nyrvo-dev/nyrvo">Nyrvo</a> e gravada em
   <a href="https://github.com/nyrvo-dev/nyrvo-runners">um repositório público</a>.
-  Um traço significa que a imagem não traz aquela ferramenta — o que vale saber
-  antes que um workflow assuma que ela está lá. Uma interrogação significa que a
-  sonda não respondeu a tempo: não se sabe se a imagem tem a ferramenta, e isso
-  não é o mesmo que saber que ela não tem. Uma exclamação significa que a
-  ferramenta está instalada mas não informou a versão — o que também não é o
-  mesmo que não tê-la.</p>
+  O que cada marca da tabela significa está logo abaixo dela: os três tipos de
+  "sem versão aqui" são fatos diferentes sobre uma máquina, e tratar todos como
+  iguais é justamente o motivo desta página existir.</p>
   <p class="lede">Um commit só existe quando algo mudou de fato, então o
   <code>git log</code> daquele repositório é o histórico. <strong>Mudou</strong>
   abaixo é a data em que cada imagem mudou pela última vez.</p>
@@ -124,6 +125,12 @@ footer a{text-decoration:none}
 </tbody>
     </table>
   </div>
+
+  <dl class="legend">
+    <dt><span class="none">&mdash;</span></dt><dd>a imagem não traz aquela ferramenta</dd>
+    <dt><span class="unknown">?</span></dt><dd>a sonda não respondeu a tempo: não se sabe, e isso não é o mesmo que não ter</dd>
+    <dt><span class="unusable">!</span></dt><dd>instalado, mas não informou a versão</dd>
+  </dl>
 
   <p class="lede" style="margin-top:24px">Os <em>nomes</em> das variáveis de ambiente também são
   registrados, no JSON linkado. Os valores não são, e nunca foram: o Nyrvo não

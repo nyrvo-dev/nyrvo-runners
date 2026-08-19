@@ -37,6 +37,10 @@ h1{font-size:clamp(26px,4vw,38px);letter-spacing:-0.02em;line-height:1.1;margin:
 .topbar{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:28px}
 .topbar .brand{margin-bottom:0}
 .langlink{font-family:var(--mono);font-size:13px;text-decoration:none}
+.legend{margin:16px 0 0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:baseline;
+  font-size:14px;color:var(--dim)}
+.legend dt{text-align:center;min-width:1.5em}
+.legend dd{margin:0}
 .tablewrap{margin-top:32px;overflow-x:auto;border:1px solid var(--divider);border-radius:8px;background:var(--surface);
   scrollbar-width:thin;scrollbar-color:color-mix(in srgb, var(--accent) 45%, transparent) transparent}
 .tablewrap::-webkit-scrollbar{height:8px}
@@ -75,11 +79,9 @@ footer a{text-decoration:none}
   <p class="lede">Every runner image below is captured once a day with
   <a href="https://github.com/nyrvo-dev/nyrvo">Nyrvo</a> and committed to
   <a href="https://github.com/nyrvo-dev/nyrvo-runners">a public repository</a>.
-  A dash means the image does not carry that tool at all — which is worth
-  knowing before a workflow assumes it does. A question mark means the probe
-  did not answer in time, so whether the image carries that tool is unknown
-  rather than ruled out. An exclamation mark means the tool is installed but
-  would not report its version, which is not the same as not having it.</p>
+  What each mark in the table means is spelled out beneath it: the three kinds
+  of "no version here" are different facts about a machine, and a workflow that
+  treats them alike is the reason this page exists.</p>
   <p class="lede">A commit exists only when something actually changed, so
   <code>git log</code> on that repository is the history. <strong>Changed</strong>
   below is the date each image last moved.</p>
@@ -123,6 +125,12 @@ footer a{text-decoration:none}
 </tbody>
     </table>
   </div>
+
+  <dl class="legend">
+    <dt><span class="none">&mdash;</span></dt><dd>the image does not carry that tool</dd>
+    <dt><span class="unknown">?</span></dt><dd>the probe did not answer in time, so this is unknown rather than ruled out</dd>
+    <dt><span class="unusable">!</span></dt><dd>installed, but would not report a version</dd>
+  </dl>
 
   <p class="lede" style="margin-top:24px">Environment variable <em>names</em> are
   recorded too, in the linked JSON. Their values are not, and never were: Nyrvo
