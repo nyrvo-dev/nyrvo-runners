@@ -21,7 +21,7 @@ env:
   # tool would look exactly like a change in a runner, and this dataset would
   # stop meaning what it claims to mean. Bump it in its own commit, so that
   # commit is the one to blame when every label moves at once.
-  NYRVO_VERSION: v0.3.0
+  NYRVO_VERSION: v0.4.0
 
 jobs:
   # Nyrvo is compiled once, here, and shipped to the runners as a binary.
