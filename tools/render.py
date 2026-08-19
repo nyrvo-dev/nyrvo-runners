@@ -21,10 +21,24 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 OUT = ROOT / "docs" / "index.html"
 
-# The order runtimes appear in the table. Fixed rather than derived from the
-# data, so a runner that lacks one shows a gap in the same column as every
-# other runner rather than shifting the table around.
-RUNTIMES = ["go", "node", "npm", "pnpm", "yarn", "python", "ruby", "php", "composer", "rust", "java", "dotnet"]
+# The table is transposed: one row per tool, one column per runner. Runners are
+# a fixed set that grows rarely while tools grow constantly, and a page scrolls
+# down for free but not sideways — so the axis that grows is the one that runs
+# down the page. The order below is fixed rather than derived from the data, so
+# a runner that lacks a tool shows a gap in the same row as every other runner
+# rather than shifting the table around.
+RUNTIMES = ["go", "node", "python", "ruby", "php", "rust", "java", "dotnet"]
+PACKAGE_MANAGERS = ["npm", "pnpm", "yarn", "composer"]
+
+# Group sections in display order: a heading row, then one row per tool. The
+# grouping is real markup — each group is its own <tbody> — not styling.
+GROUPS = [
+    ("system", ["os/arch"]),
+    ("runtimes", RUNTIMES),
+    ("package_managers", PACKAGE_MANAGERS),
+    ("containers", ["docker engine", "docker compose"]),
+    ("changed", ["changed"]),
+]
 
 
 def load():
@@ -68,8 +82,9 @@ def last_changed(label):
 
 
 # Every string on the page that is prose rather than data. The table itself is
-# almost entirely version numbers, and the column headers are tool names — "go",
+# almost entirely version numbers, and the row labels are tool names — "go",
 # "docker" — which are identifiers, not words, so they are never translated.
+# The group headings are prose, so each language has its own.
 #
 # Both languages are generated as separate files rather than switched by script.
 # nyrvo.dev keeps its copy in JavaScript, which suits a page whose content is
@@ -97,8 +112,16 @@ COPY = {
   recorded too, in the linked JSON. Their values are not, and never were: Nyrvo
   does not read them, which is what makes publishing a runner's environment safe
   at all.""",
-        "col_runner": "runner", "col_osarch": "os/arch",
-        "col_docker": "docker", "col_changed": "changed",
+        # The group headings and the prose labels translate. The runner names
+        # (column headers) and the tool names (row labels) stay as they are:
+        # they are identifiers from GitHub and from the tools themselves, not
+        # words to translate. "docker engine" and "docker compose" are product
+        # names, kept as-is in both languages.
+        "group_system": "system", "group_runtimes": "runtimes",
+        "group_package_managers": "package managers", "group_containers": "containers",
+        "group_changed": "changed",
+        "row_osarch": "os/arch", "row_changed": "changed",
+        "row_docker_engine": "docker engine", "row_docker_compose": "docker compose",
         "unknown_title": "not measured: the probe did not answer in time",
         "unusable_title": "installed, but would not report a version",
         "repository": "Repository",
@@ -125,10 +148,16 @@ COPY = {
         "env_note": """Os <em>nomes</em> das variáveis de ambiente também são
   registrados, no JSON linkado. Os valores não são, e nunca foram: o Nyrvo não
   os lê, e é isso que torna seguro publicar o ambiente de um runner.""",
-        # "runner" and the tool names stay as they are: they are identifiers
-        # from GitHub and from the tools themselves, not words to translate.
-        "col_runner": "runner", "col_osarch": "so/arch",
-        "col_docker": "docker", "col_changed": "mudou",
+        # Os cabeçalhos de grupo e os rótulos prosaicos traduzem. Os nomes dos
+        # runners (cabeçalhos de coluna) e os nomes das ferramentas (rótulos de
+        # linha) ficam como estão: são identificadores do GitHub e das próprias
+        # ferramentas, não palavras para traduzir. "docker engine" e "docker
+        # compose" são nomes de produto, mantidos nos dois idiomas.
+        "group_system": "sistema", "group_runtimes": "ambientes de execução",
+        "group_package_managers": "gerenciadores de pacotes", "group_containers": "contêineres",
+        "group_changed": "mudou",
+        "row_osarch": "so/arch", "row_changed": "mudou",
+        "row_docker_engine": "docker engine", "row_docker_compose": "docker compose",
         "unknown_title": "não medido: a sonda não respondeu a tempo",
         "unusable_title": "instalado, mas não informou a versão",
         "repository": "Repositório",
@@ -167,20 +196,14 @@ def cell(value, copy, unknown=False, unusable=False):
     return html.escape(value) if value else '<span class="none">—</span>'
 
 
-def docker_cell(docker, unmeasured, copy, unusable=frozenset()):
-    """The container tooling column: engine version, then compose.
+def engine_cell(docker, unmeasured, copy, unusable=frozenset()):
+    """The container row for the engine version.
 
-    Compose gets its own half of the cell rather than being left to the linked
-    JSON. It is the piece a compose-backed test suite actually depends on, and
-    "this image ships no compose" is exactly the assumption a workflow makes
-    wrongly. An absent compose is therefore printed as a dash rather than
-    omitted, because a cell that simply stops after the engine version says
-    nothing about whether the question was asked.
-
-    daemon_running is treated as part of the engine reading: it is a bool with
-    no third state, so a probe that ran out of time leaves a confident false
-    behind, and "(no daemon)" would report a machine that was never asked as
-    one whose daemon is down.
+    Compose is its own row; this one is just the engine, and daemon_running is
+    treated as part of the engine reading. It is a bool with no third state, so
+    a probe that ran out of time leaves a confident false behind, and "(no
+    daemon)" would report a machine that was never asked as one whose daemon is
+    down.
     """
     if not docker:
         return cell("", copy)
@@ -192,37 +215,84 @@ def docker_cell(docker, unmeasured, copy, unusable=frozenset()):
     # unmeasured or refused probe leaves a confident false behind.
     if engine and not engine_unknown and not engine_unusable and not docker.get("daemon_running"):
         engine += " (no daemon)"
-    compose = cell(docker.get("compose_version", ""), copy,
-                   "docker.compose_version" in unmeasured,
-                   "docker.compose_version" in unusable)
-    return f"{cell(engine, copy, engine_unknown, engine_unusable)} · compose {compose}"
+    return cell(engine, copy, engine_unknown, engine_unusable)
 
 
-def render_rows(rows, copy):
-    out = []
-    for label, snap in rows:
-        system = snap.get("system") or {}
-        versions = {r["name"]: r.get("version", "") for r in snap.get("runtimes", [])}
+def compose_cell(docker, unmeasured, copy, unusable=frozenset()):
+    """The container row for compose.
+
+    Compose is its own row rather than fused into the engine cell: it is the
+    piece a compose-backed test suite actually depends on, and "this image ships
+    no compose" is exactly the assumption a workflow makes wrongly. An absent
+    compose is therefore printed as a dash rather than omitted, because a cell
+    that simply stops after the engine version says nothing about whether the
+    question was asked.
+    """
+    if not docker:
+        return cell("", copy)
+    return cell(docker.get("compose_version", ""), copy,
+                "docker.compose_version" in unmeasured,
+                "docker.compose_version" in unusable)
+
+
+# Row labels that are prose rather than tool names; the rest render untranslated.
+ROW_LABELS = {
+    "os/arch": "row_osarch",
+    "docker engine": "row_docker_engine",
+    "docker compose": "row_docker_compose",
+    "changed": "row_changed",
+}
+
+
+def runner_context(label, snap):
+    """Everything one row's cells need from one runner's snapshot."""
+    return {
+        "label": label,
+        "system": snap.get("system") or {},
         # "<component>.<key>" entries the capture could not measure. Optional and
         # usually absent: a snapshot without it is one where everything answered.
-        unmeasured = set(snap.get("unmeasured") or [])
+        "unmeasured": set(snap.get("unmeasured") or []),
         # "<component>.<key>" entries whose tool was found and refused to answer.
         # Also optional, and absent from every snapshot captured before v0.2.0 —
         # the live data predates the field, so this must never assume it is there.
-        unusable = set(snap.get("unusable") or [])
+        "unusable": set(snap.get("unusable") or []),
+        "versions": {r["name"]: r.get("version", "") for r in snap.get("runtimes", [])},
+        "docker": snap.get("docker") or {},
+    }
 
-        cells = "".join(
-            f"<td>{cell(versions.get(name, ''), copy, f'runtime.{name}' in unmeasured, f'runtime.{name}' in unusable)}</td>"
-            for name in RUNTIMES
-        )
-        out.append(
-            f'<tr><th scope="row"><a href="https://github.com/nyrvo-dev/nyrvo-runners'
-            f'/blob/main/data/{html.escape(label)}/current.json">{html.escape(label)}</a></th>'
-            f"<td>{cell(system.get('os'), copy, 'system.os' in unmeasured, 'system.os' in unusable)}"
-            f"/{cell(system.get('arch'), copy, 'system.arch' in unmeasured, 'system.arch' in unusable)}</td>"
-            f"{cells}<td>{docker_cell(snap.get('docker') or {}, unmeasured, copy, unusable)}</td>"
-            f'<td class="date">{cell(last_changed(label), copy)}</td></tr>'
-        )
+
+def tool_cell(name, runner, copy):
+    """One cell in a tool row: the value for one runner."""
+    if name == "os/arch":
+        return (f"<td>{cell(runner['system'].get('os'), copy, 'system.os' in runner['unmeasured'], 'system.os' in runner['unusable'])}"
+                f"/{cell(runner['system'].get('arch'), copy, 'system.arch' in runner['unmeasured'], 'system.arch' in runner['unusable'])}</td>")
+    if name == "docker engine":
+        return f"<td>{engine_cell(runner['docker'], runner['unmeasured'], copy, runner['unusable'])}</td>"
+    if name == "docker compose":
+        return f"<td>{compose_cell(runner['docker'], runner['unmeasured'], copy, runner['unusable'])}</td>"
+    if name == "changed":
+        return f'<td class="date">{cell(last_changed(runner["label"]), copy)}</td>'
+    return (f"<td>{cell(runner['versions'].get(name, ''), copy, f'runtime.{name}' in runner['unmeasured'], f'runtime.{name}' in runner['unusable'])}</td>")
+
+
+def tool_row(name, runners, copy):
+    """One tool row: the sticky label, then one cell per runner."""
+    label = copy[ROW_LABELS[name]] if name in ROW_LABELS else name
+    cells = "".join(tool_cell(name, runner, copy) for runner in runners)
+    return f'<tr><th scope="row" class="label">{html.escape(label)}</th>{cells}</tr>'
+
+
+def render_groups(rows, copy):
+    """The table body: a heading row and its tool rows per group."""
+    runners = [runner_context(label, snap) for label, snap in rows]
+    cols = len(runners) + 1
+    out = []
+    for group_key, tool_names in GROUPS:
+        out.append("<tbody>")
+        out.append(f'<tr class="group"><th scope="rowgroup" colspan="{cols}">'
+                   f'{html.escape(copy[f"group_{group_key}"])}</th></tr>')
+        out.extend(tool_row(name, runners, copy) for name in tool_names)
+        out.append("</tbody>")
     return "\n".join(out)
 
 
@@ -270,12 +340,20 @@ h1{font-size:clamp(26px,4vw,38px);letter-spacing:-0.02em;line-height:1.1;margin:
 .tablewrap::-webkit-scrollbar{height:8px}
 .tablewrap::-webkit-scrollbar-track{background:transparent}
 .tablewrap::-webkit-scrollbar-thumb{background:color-mix(in srgb, var(--accent) 35%, transparent);border-radius:99px;border:2px solid transparent;background-clip:padding-box}
-table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:13px;white-space:nowrap}
+table{border-collapse:separate;border-spacing:0;width:100%;font-family:var(--mono);font-size:13px;white-space:nowrap}
 th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--divider)}
 thead th{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);font-weight:400}
-tbody tr:last-child th,tbody tr:last-child td{border-bottom:0}
+/* The runner column headers are identifiers, so they keep their own case and size. */
+thead th.runner{font-size:12px;letter-spacing:0;text-transform:none;color:var(--text);font-weight:500}
+thead th.runner a{text-decoration:none}
+/* The label column stays put while the runner columns scroll, so the row names
+   remain readable on a narrow screen. Needs an opaque background, or the cells
+   underneath would show through, and the separate border model so the sticky
+   borders move with it. */
+.label{position:sticky;left:0;background:var(--surface);border-right:1px solid var(--divider);z-index:1}
+table>tbody:last-child>tr:last-child th,table>tbody:last-child>tr:last-child td{border-bottom:0}
 tbody th{font-weight:500}
-tbody th a{text-decoration:none}
+tbody tr.group th{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--dim);font-weight:400;background:color-mix(in srgb, var(--text) 6%, transparent)}
 .none{color:var(--dim)}
 .unknown{color:var(--dim);cursor:help}
 .unusable{color:var(--accent);cursor:help}
@@ -298,13 +376,10 @@ footer a{text-decoration:none}
   <div class="tablewrap">
     <table>
       <thead><tr>
-        <th scope="col">__COLRUNNER__</th><th scope="col">__COLOSARCH__</th>
+        <th scope="col" class="label"></th>
         __HEADERS__
-        <th scope="col">__COLDOCKER__</th><th scope="col">__COLCHANGED__</th>
       </tr></thead>
-      <tbody>
-__ROWS__
-      </tbody>
+__GROUPS__
     </table>
   </div>
 
@@ -326,7 +401,11 @@ def render_page(rows, copy, version):
     """One language's page. Substitution is by __NAME__ rather than str.format
     because the template carries CSS, and every brace in it would have to be
     doubled for format to leave it alone."""
-    headers = "".join(f'<th scope="col">{name}</th>' for name in RUNTIMES)
+    headers = "".join(
+        f'<th scope="col" class="runner"><a href="https://github.com/nyrvo-dev/nyrvo-runners'
+        f'/blob/main/data/{html.escape(label)}/current.json">{html.escape(label)}</a></th>'
+        for label, snap in rows
+    )
     page = TEMPLATE
     for key, value in {
         "__LANG__": copy["lang"], "__DIR__": copy["dir"],
@@ -336,10 +415,8 @@ def render_page(rows, copy, version):
         "__OGDESC__": copy["og_description"], "__H1__": copy["h1"],
         "__LEDE1__": copy["lede1"], "__LEDE2__": copy["lede2"],
         "__ENVNOTE__": copy["env_note"],
-        "__COLRUNNER__": copy["col_runner"], "__COLOSARCH__": copy["col_osarch"],
-        "__COLDOCKER__": copy["col_docker"], "__COLCHANGED__": copy["col_changed"],
         "__REPOSITORY__": copy["repository"], "__CAPTUREDWITH__": copy["captured_with"],
-        "__HEADERS__": headers, "__ROWS__": render_rows(rows, copy),
+        "__HEADERS__": headers, "__GROUPS__": render_groups(rows, copy),
         "__VERSION__": html.escape(version),
     }.items():
         page = page.replace(key, value)

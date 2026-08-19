@@ -1,1 +1,4 @@
 .DS_Store
+
+# render.py leaves these behind when run locally.
+__pycache__/
