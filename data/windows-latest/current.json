@@ -1,7 +1,9 @@
 {
   "docker": {
     "client_version": "29.1.5",
-    "daemon_running": false
+    "compose_version": "2.40.3",
+    "daemon_running": true,
+    "server_version": "29.1.5"
   },
   "environment": {
     "names": [
@@ -228,8 +230,5 @@
     "arch": "amd64",
     "kernel": "3.6.9-b4195d69.x86_64",
     "os": "windows"
-  },
-  "unmeasured": [
-    "docker.compose_version"
-  ]
+  }
 }
