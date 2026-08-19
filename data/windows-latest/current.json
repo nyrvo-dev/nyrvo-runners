@@ -1,9 +1,7 @@
 {
   "docker": {
     "client_version": "29.1.5",
-    "compose_version": "2.40.3",
-    "daemon_running": true,
-    "server_version": "29.1.5"
+    "daemon_running": false
   },
   "environment": {
     "names": [
@@ -167,6 +165,11 @@
   "name": "windows-latest",
   "runtimes": [
     {
+      "name": "composer",
+      "path": "c:\\tools\\php\\composer.bat",
+      "version": "2.10.2"
+    },
+    {
       "name": "dotnet",
       "path": "C:\\Program Files\\dotnet\\dotnet.exe",
       "version": "10.0.302"
@@ -207,6 +210,11 @@
       "version": "3.3.12"
     },
     {
+      "name": "rust",
+      "path": "C:\\Users\\runneradmin\\.cargo\\bin\\rustc.exe",
+      "version": "1.97.1"
+    },
+    {
       "name": "yarn",
       "path": "C:\\npm\\prefix\\yarn.cmd",
       "version": "1.22.22"
@@ -222,6 +230,6 @@
     "os": "windows"
   },
   "unmeasured": [
-    "runtime.rust"
+    "docker.compose_version"
   ]
 }

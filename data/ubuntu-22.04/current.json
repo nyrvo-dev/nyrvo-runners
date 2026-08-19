@@ -128,9 +128,14 @@
   "name": "ubuntu-22.04",
   "runtimes": [
     {
+      "name": "composer",
+      "path": "/usr/bin/composer",
+      "version": "2.10.2"
+    },
+    {
       "name": "dotnet",
       "path": "/usr/bin/dotnet",
-      "version": "10.0.400"
+      "version": "10.0.302"
     },
     {
       "name": "go",
