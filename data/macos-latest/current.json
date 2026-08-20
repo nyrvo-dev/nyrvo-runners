@@ -156,7 +156,7 @@
       "version": "1.22.22"
     }
   ],
-  "schema_version": 1,
+  "schema_version": 2,
   "source": {
     "kind": "local"
   },
