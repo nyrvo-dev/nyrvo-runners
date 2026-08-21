@@ -135,7 +135,7 @@
     {
       "name": "dotnet",
       "path": "/usr/bin/dotnet",
-      "version": "10.0.302"
+      "version": "10.0.400"
     },
     {
       "name": "go",
