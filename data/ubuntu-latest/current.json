@@ -145,7 +145,7 @@
     {
       "name": "java",
       "path": "/usr/bin/java",
-      "version": "17.0.20"
+      "version": "17.0.20.1"
     },
     {
       "name": "node",
@@ -175,7 +175,7 @@
     {
       "name": "rust",
       "path": "/home/runner/.cargo/bin/rustc",
-      "version": "1.97.1"
+      "version": "1.98.0"
     },
     {
       "name": "yarn",
