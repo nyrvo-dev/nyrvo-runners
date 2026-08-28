@@ -183,8 +183,8 @@
     },
     {
       "name": "java",
-      "path": "C:\\hostedtoolcache\\windows\\Java_Temurin-Hotspot_jdk\\17.0.20-8\\x64\\bin\\java.exe",
-      "version": "17.0.20"
+      "path": "C:\\hostedtoolcache\\windows\\Java_Temurin-Hotspot_jdk\\17.0.20-101\\x64\\bin\\java.exe",
+      "version": "17.0.20.1"
     },
     {
       "name": "node",
@@ -214,7 +214,7 @@
     {
       "name": "rust",
       "path": "C:\\Users\\runneradmin\\.cargo\\bin\\rustc.exe",
-      "version": "1.97.1"
+      "version": "1.98.0"
     },
     {
       "name": "yarn",
@@ -228,7 +228,7 @@
   },
   "system": {
     "arch": "amd64",
-    "kernel": "3.6.9-b4195d69.x86_64",
+    "kernel": "3.6.10-710e5275.x86_64",
     "os": "windows"
   }
 }
