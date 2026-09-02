@@ -1,7 +1,6 @@
 {
   "docker": {
     "client_version": "29.1.5",
-    "compose_version": "2.40.3",
     "daemon_running": true,
     "server_version": "29.1.5"
   },
@@ -230,5 +229,8 @@
     "arch": "amd64",
     "kernel": "3.6.10-710e5275.x86_64",
     "os": "windows"
-  }
+  },
+  "unmeasured": [
+    "docker.compose_version"
+  ]
 }
