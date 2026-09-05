@@ -118,17 +118,17 @@
     {
       "name": "dotnet",
       "path": "/usr/local/bin/dotnet",
-      "version": "10.0.302"
+      "version": "10.0.400"
     },
     {
       "name": "java",
       "path": "/usr/bin/java",
-      "version": "21.0.11"
+      "version": "21.0.12.1"
     },
     {
       "name": "node",
       "path": "/opt/homebrew/bin/node",
-      "version": "22.23.1"
+      "version": "22.23.2"
     },
     {
       "name": "npm",
@@ -138,7 +138,7 @@
     {
       "name": "python",
       "path": "/opt/homebrew/bin/python3",
-      "version": "3.14.6"
+      "version": "3.14.7"
     },
     {
       "name": "ruby",
@@ -148,7 +148,7 @@
     {
       "name": "rust",
       "path": "/Users/runner/.cargo/bin/rustc",
-      "version": "1.97.1"
+      "version": "1.98.0"
     },
     {
       "name": "yarn",
