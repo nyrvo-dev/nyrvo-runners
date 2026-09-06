@@ -2,7 +2,8 @@
   "docker": {
     "client_version": "29.1.5",
     "compose_version": "2.40.3",
-    "daemon_running": false
+    "daemon_running": true,
+    "server_version": "29.1.5"
   },
   "environment": {
     "names": [
