@@ -133,6 +133,11 @@
       "version": "2.10.3"
     },
     {
+      "name": "dotnet",
+      "path": "/usr/bin/dotnet",
+      "version": "10.0.400"
+    },
+    {
       "name": "go",
       "path": "/usr/bin/go",
       "version": "1.24.13"
@@ -186,8 +191,5 @@
     "arch": "amd64",
     "kernel": "6.17.0-1022-azure",
     "os": "linux"
-  },
-  "unmeasured": [
-    "runtime.dotnet"
-  ]
+  }
 }
