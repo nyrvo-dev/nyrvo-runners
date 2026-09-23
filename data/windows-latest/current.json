@@ -1,8 +1,8 @@
 {
   "docker": {
     "client_version": "29.7.2",
-    "compose_version": "2.40.3",
-    "daemon_running": false
+    "daemon_running": true,
+    "server_version": "29.7.2"
   },
   "environment": {
     "names": [
@@ -206,11 +206,6 @@
       "version": "3.3.12"
     },
     {
-      "name": "rust",
-      "path": "C:\\Users\\runneradmin\\.cargo\\bin\\rustc.exe",
-      "version": "1.98.1"
-    },
-    {
       "name": "yarn",
       "path": "C:\\npm\\prefix\\yarn.cmd",
       "version": "1.22.22"
@@ -226,6 +221,8 @@
     "os": "windows"
   },
   "unmeasured": [
-    "runtime.npm"
+    "docker.compose_version",
+    "runtime.npm",
+    "runtime.rust"
   ]
 }
