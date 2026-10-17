@@ -1,7 +1,6 @@
 {
   "docker": {
     "client_version": "28.0.4",
-    "compose_version": "2.38.2",
     "daemon_running": true,
     "server_version": "28.0.4"
   },
@@ -133,11 +132,6 @@
       "version": "2.10.3"
     },
     {
-      "name": "dotnet",
-      "path": "/usr/bin/dotnet",
-      "version": "10.0.401"
-    },
-    {
       "name": "go",
       "path": "/usr/bin/go",
       "version": "1.24.13"
@@ -173,11 +167,6 @@
       "version": "3.0.2"
     },
     {
-      "name": "rust",
-      "path": "/home/runner/.cargo/bin/rustc",
-      "version": "1.99.0"
-    },
-    {
       "name": "yarn",
       "path": "/usr/local/bin/yarn",
       "version": "1.22.22"
@@ -191,5 +180,10 @@
     "arch": "amd64",
     "kernel": "6.8.0-1064-azure",
     "os": "linux"
-  }
+  },
+  "unmeasured": [
+    "docker.compose_version",
+    "runtime.dotnet",
+    "runtime.rust"
+  ]
 }
