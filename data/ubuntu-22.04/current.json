@@ -1,6 +1,7 @@
 {
   "docker": {
     "client_version": "28.0.4",
+    "compose_version": "2.38.2",
     "daemon_running": true,
     "server_version": "28.0.4"
   },
@@ -167,6 +168,11 @@
       "version": "3.0.2"
     },
     {
+      "name": "rust",
+      "path": "/home/runner/.cargo/bin/rustc",
+      "version": "1.99.0"
+    },
+    {
       "name": "yarn",
       "path": "/usr/local/bin/yarn",
       "version": "1.22.22"
@@ -182,8 +188,6 @@
     "os": "linux"
   },
   "unmeasured": [
-    "docker.compose_version",
-    "runtime.dotnet",
-    "runtime.rust"
+    "runtime.dotnet"
   ]
 }
