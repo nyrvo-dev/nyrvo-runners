@@ -135,7 +135,7 @@
     {
       "name": "dotnet",
       "path": "/usr/bin/dotnet",
-      "version": "10.0.402"
+      "version": "10.0.401"
     },
     {
       "name": "go",
@@ -175,7 +175,7 @@
     {
       "name": "rust",
       "path": "/home/runner/.cargo/bin/rustc",
-      "version": "1.99.1"
+      "version": "1.99.0"
     },
     {
       "name": "yarn",
@@ -189,7 +189,7 @@
   },
   "system": {
     "arch": "amd64",
-    "kernel": "7.0.0-1017-azure",
+    "kernel": "6.17.0-1022-azure",
     "os": "linux"
   }
 }
