@@ -135,7 +135,7 @@
     {
       "name": "dotnet",
       "path": "/usr/bin/dotnet",
-      "version": "10.0.403"
+      "version": "10.0.401"
     },
     {
       "name": "go",
@@ -145,12 +145,12 @@
     {
       "name": "java",
       "path": "/usr/bin/java",
-      "version": "17.0.21"
+      "version": "17.0.20.1"
     },
     {
       "name": "node",
       "path": "/usr/local/bin/node",
-      "version": "22.23.4"
+      "version": "22.23.3"
     },
     {
       "name": "npm",
@@ -175,7 +175,7 @@
     {
       "name": "rust",
       "path": "/home/runner/.cargo/bin/rustc",
-      "version": "1.99.1"
+      "version": "1.99.0"
     },
     {
       "name": "yarn",
@@ -189,7 +189,7 @@
   },
   "system": {
     "arch": "amd64",
-    "kernel": "7.0.0-1017-azure",
+    "kernel": "6.17.0-1022-azure",
     "os": "linux"
   }
 }
