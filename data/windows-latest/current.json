@@ -169,12 +169,12 @@
     {
       "name": "composer",
       "path": "c:\\tools\\php\\composer.bat",
-      "version": "2.10.3"
+      "version": "2.11.0"
     },
     {
       "name": "dotnet",
       "path": "C:\\Program Files\\dotnet\\dotnet.exe",
-      "version": "10.0.402"
+      "version": "10.0.403"
     },
     {
       "name": "go",
@@ -199,7 +199,7 @@
     {
       "name": "php",
       "path": "c:\\tools\\php\\php.exe",
-      "version": "8.5.11"
+      "version": "8.5.12"
     },
     {
       "name": "python",
@@ -208,8 +208,8 @@
     },
     {
       "name": "ruby",
-      "path": "C:\\hostedtoolcache\\windows\\Ruby\\3.3.12\\x64\\bin\\ruby.exe",
-      "version": "3.3.12"
+      "path": "C:\\hostedtoolcache\\windows\\Ruby\\3.3.13\\x64\\bin\\ruby.exe",
+      "version": "3.3.13"
     },
     {
       "name": "rust",
