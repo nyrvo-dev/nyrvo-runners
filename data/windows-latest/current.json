@@ -169,7 +169,7 @@
     {
       "name": "composer",
       "path": "c:\\tools\\php\\composer.bat",
-      "version": "2.11.0"
+      "version": "2.11.1"
     },
     {
       "name": "dotnet",
@@ -183,8 +183,8 @@
     },
     {
       "name": "java",
-      "path": "C:\\hostedtoolcache\\windows\\Java_Temurin-Hotspot_jdk\\17.0.20-101\\x64\\bin\\java.exe",
-      "version": "17.0.20.1"
+      "path": "C:\\hostedtoolcache\\windows\\Java_Temurin-Hotspot_jdk\\17.0.21-9\\x64\\bin\\java.exe",
+      "version": "17.0.21"
     },
     {
       "name": "node",
