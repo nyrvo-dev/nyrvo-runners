@@ -128,7 +128,7 @@
     {
       "name": "node",
       "path": "/opt/homebrew/bin/node",
-      "version": "24.22.1"
+      "version": "24.22.2"
     },
     {
       "name": "npm",
@@ -138,7 +138,7 @@
     {
       "name": "python",
       "path": "/opt/homebrew/bin/python3",
-      "version": "3.15.1"
+      "version": "3.15.2"
     },
     {
       "name": "ruby",
