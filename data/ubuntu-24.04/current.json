@@ -112,7 +112,6 @@
       "RUNNER_TRACKING_ID",
       "RUNNER_WORKSPACE",
       "SELENIUM_JAR_PATH",
-      "SGX_AESM_ADDR",
       "SHELL",
       "SHLVL",
       "SWIFT_PATH",
@@ -130,12 +129,12 @@
     {
       "name": "composer",
       "path": "/usr/bin/composer",
-      "version": "2.11.1"
+      "version": "2.11.2"
     },
     {
       "name": "dotnet",
       "path": "/usr/bin/dotnet",
-      "version": "10.0.403"
+      "version": "11.0.100"
     },
     {
       "name": "go",
@@ -189,7 +188,7 @@
   },
   "system": {
     "arch": "amd64",
-    "kernel": "7.0.0-1017-azure",
+    "kernel": "7.0.0-1014-aws",
     "os": "linux"
   }
 }
