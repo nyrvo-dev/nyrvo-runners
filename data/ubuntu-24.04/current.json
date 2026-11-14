@@ -112,6 +112,7 @@
       "RUNNER_TRACKING_ID",
       "RUNNER_WORKSPACE",
       "SELENIUM_JAR_PATH",
+      "SGX_AESM_ADDR",
       "SHELL",
       "SHLVL",
       "SWIFT_PATH",
@@ -188,7 +189,7 @@
   },
   "system": {
     "arch": "amd64",
-    "kernel": "7.0.0-1014-aws",
+    "kernel": "7.0.0-1017-azure",
     "os": "linux"
   }
 }
