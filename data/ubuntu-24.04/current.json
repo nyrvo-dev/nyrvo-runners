@@ -149,7 +149,7 @@
     {
       "name": "node",
       "path": "/usr/local/bin/node",
-      "version": "22.23.4"
+      "version": "22.23.5"
     },
     {
       "name": "npm",
