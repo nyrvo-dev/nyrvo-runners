@@ -2,7 +2,8 @@
   "docker": {
     "client_version": "29.7.2",
     "compose_version": "2.40.3",
-    "daemon_running": false
+    "daemon_running": true,
+    "server_version": "29.7.2"
   },
   "environment": {
     "names": [
@@ -83,9 +84,9 @@
       "GITHUB_WORKFLOW_REF",
       "GITHUB_WORKFLOW_SHA",
       "GITHUB_WORKSPACE",
-      "GOROOT_1_24_X64",
       "GOROOT_1_25_X64",
       "GOROOT_1_26_X64",
+      "GOROOT_1_27_X64",
       "GRADLE_HOME",
       "GeckoWebDriver",
       "HOME",
@@ -168,17 +169,17 @@
     {
       "name": "composer",
       "path": "c:\\tools\\php\\composer.bat",
-      "version": "2.11.1"
+      "version": "2.11.2"
     },
     {
       "name": "dotnet",
       "path": "C:\\Program Files\\dotnet\\dotnet.exe",
-      "version": "10.0.403"
+      "version": "11.0.100"
     },
     {
       "name": "go",
-      "path": "C:\\hostedtoolcache\\windows\\go\\1.24.13\\x64\\bin\\go.exe",
-      "version": "1.24.13"
+      "path": "C:\\hostedtoolcache\\windows\\go\\1.26.11\\x64\\bin\\go.exe",
+      "version": "1.26.11"
     },
     {
       "name": "java",
@@ -188,7 +189,7 @@
     {
       "name": "node",
       "path": "C:\\Program Files\\nodejs\\node.exe",
-      "version": "22.23.4"
+      "version": "22.23.5"
     },
     {
       "name": "npm",
@@ -213,7 +214,7 @@
     {
       "name": "rust",
       "path": "C:\\Users\\runneradmin\\.cargo\\bin\\rustc.exe",
-      "version": "1.99.1"
+      "version": "1.100.0"
     },
     {
       "name": "yarn",

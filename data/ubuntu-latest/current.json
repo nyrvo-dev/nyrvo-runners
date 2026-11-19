@@ -110,6 +110,7 @@
       "RUNNER_TRACKING_ID",
       "RUNNER_WORKSPACE",
       "SELENIUM_JAR_PATH",
+      "SGX_AESM_ADDR",
       "SHELL",
       "SHLVL",
       "SWIFT_PATH",
@@ -147,7 +148,7 @@
     {
       "name": "node",
       "path": "/usr/local/bin/node",
-      "version": "24.22.3"
+      "version": "24.22.2"
     },
     {
       "name": "npm",
@@ -170,6 +171,11 @@
       "version": "3.3.8"
     },
     {
+      "name": "rust",
+      "path": "/home/runner/.cargo/bin/rustc",
+      "version": "1.99.1"
+    },
+    {
       "name": "yarn",
       "path": "/usr/local/bin/yarn",
       "version": "1.22.22"
@@ -181,10 +187,7 @@
   },
   "system": {
     "arch": "amd64",
-    "kernel": "7.0.0-1016-aws",
+    "kernel": "7.0.0-1019-azure",
     "os": "linux"
-  },
-  "unmeasured": [
-    "runtime.rust"
-  ]
+  }
 }
