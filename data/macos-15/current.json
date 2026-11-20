@@ -59,9 +59,9 @@
       "GITHUB_WORKFLOW_REF",
       "GITHUB_WORKFLOW_SHA",
       "GITHUB_WORKSPACE",
-      "GOROOT_1_24_ARM64",
       "GOROOT_1_25_ARM64",
       "GOROOT_1_26_ARM64",
+      "GOROOT_1_27_ARM64",
       "HOME",
       "HOMEBREW_CASK_OPTS",
       "HOMEBREW_CELLAR",
@@ -118,7 +118,7 @@
     {
       "name": "dotnet",
       "path": "/usr/local/bin/dotnet",
-      "version": "10.0.403"
+      "version": "11.0.100"
     },
     {
       "name": "java",
@@ -128,7 +128,7 @@
     {
       "name": "node",
       "path": "/opt/homebrew/bin/node",
-      "version": "22.23.4"
+      "version": "22.23.5"
     },
     {
       "name": "npm",
@@ -148,7 +148,7 @@
     {
       "name": "rust",
       "path": "/opt/homebrew/opt/rustup/bin/rustc",
-      "version": "1.99.1"
+      "version": "1.100.0"
     },
     {
       "name": "yarn",
