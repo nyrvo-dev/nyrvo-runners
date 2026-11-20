@@ -72,9 +72,9 @@
       "GITHUB_WORKFLOW_REF",
       "GITHUB_WORKFLOW_SHA",
       "GITHUB_WORKSPACE",
-      "GOROOT_1_24_X64",
       "GOROOT_1_25_X64",
       "GOROOT_1_26_X64",
+      "GOROOT_1_27_X64",
       "GRADLE_HOME",
       "HCA_CLOUD_PROVIDER",
       "HOME",
@@ -140,7 +140,7 @@
     {
       "name": "go",
       "path": "/usr/bin/go",
-      "version": "1.24.13"
+      "version": "1.26.11"
     },
     {
       "name": "java",
@@ -150,7 +150,7 @@
     {
       "name": "node",
       "path": "/usr/local/bin/node",
-      "version": "22.23.4"
+      "version": "22.23.5"
     },
     {
       "name": "npm",
@@ -175,7 +175,7 @@
     {
       "name": "rust",
       "path": "/home/runner/.cargo/bin/rustc",
-      "version": "1.99.1"
+      "version": "1.100.0"
     },
     {
       "name": "yarn",
