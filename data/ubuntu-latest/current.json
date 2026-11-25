@@ -71,9 +71,9 @@
       "GITHUB_WORKFLOW_REF",
       "GITHUB_WORKFLOW_SHA",
       "GITHUB_WORKSPACE",
-      "GOROOT_1_24_X64",
       "GOROOT_1_25_X64",
       "GOROOT_1_26_X64",
+      "GOROOT_1_27_X64",
       "GRADLE_HOME",
       "HCA_CLOUD_PROVIDER",
       "HOME",
@@ -110,6 +110,7 @@
       "RUNNER_TRACKING_ID",
       "RUNNER_WORKSPACE",
       "SELENIUM_JAR_PATH",
+      "SGX_AESM_ADDR",
       "SHELL",
       "SHLVL",
       "SWIFT_PATH",
@@ -186,7 +187,7 @@
   },
   "system": {
     "arch": "amd64",
-    "kernel": "7.0.0-1016-aws",
+    "kernel": "7.0.0-1020-azure",
     "os": "linux"
   }
 }
