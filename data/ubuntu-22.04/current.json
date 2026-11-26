@@ -145,7 +145,7 @@
     {
       "name": "java",
       "path": "/usr/bin/java",
-      "version": "11.0.33"
+      "version": "11.0.33.1"
     },
     {
       "name": "node",
@@ -189,7 +189,7 @@
   },
   "system": {
     "arch": "amd64",
-    "kernel": "6.8.0-1070-azure",
+    "kernel": "6.8.0-1073-azure",
     "os": "linux"
   }
 }

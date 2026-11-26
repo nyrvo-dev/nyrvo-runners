@@ -183,8 +183,8 @@
     },
     {
       "name": "java",
-      "path": "C:\\hostedtoolcache\\windows\\Java_Temurin-Hotspot_jdk\\17.0.21-100000002\\x64\\bin\\java.exe",
-      "version": "17.0.21.1"
+      "path": "C:\\hostedtoolcache\\windows\\Java_Temurin-Hotspot_jdk\\17.0.21-9\\x64\\bin\\java.exe",
+      "version": "17.0.21"
     },
     {
       "name": "node",
@@ -199,7 +199,7 @@
     {
       "name": "php",
       "path": "c:\\tools\\php\\php.exe",
-      "version": "8.5.13"
+      "version": "8.5.12"
     },
     {
       "name": "python",
@@ -208,8 +208,8 @@
     },
     {
       "name": "ruby",
-      "path": "C:\\hostedtoolcache\\windows\\Ruby\\3.3.14\\x64\\bin\\ruby.exe",
-      "version": "3.3.14"
+      "path": "C:\\hostedtoolcache\\windows\\Ruby\\3.3.13\\x64\\bin\\ruby.exe",
+      "version": "3.3.13"
     },
     {
       "name": "rust",
