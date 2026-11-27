@@ -112,7 +112,6 @@
       "RUNNER_TRACKING_ID",
       "RUNNER_WORKSPACE",
       "SELENIUM_JAR_PATH",
-      "SGX_AESM_ADDR",
       "SHELL",
       "SHLVL",
       "SWIFT_PATH",
@@ -145,7 +144,7 @@
     {
       "name": "java",
       "path": "/usr/bin/java",
-      "version": "17.0.21"
+      "version": "17.0.21.1"
     },
     {
       "name": "node",
@@ -189,7 +188,7 @@
   },
   "system": {
     "arch": "amd64",
-    "kernel": "7.0.0-1017-azure",
+    "kernel": "7.0.0-1018-aws",
     "os": "linux"
   }
 }

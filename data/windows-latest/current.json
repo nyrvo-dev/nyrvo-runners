@@ -1,7 +1,6 @@
 {
   "docker": {
     "client_version": "29.7.2",
-    "compose_version": "2.40.3",
     "daemon_running": true,
     "server_version": "29.7.2"
   },
@@ -183,8 +182,8 @@
     },
     {
       "name": "java",
-      "path": "C:\\hostedtoolcache\\windows\\Java_Temurin-Hotspot_jdk\\17.0.21-9\\x64\\bin\\java.exe",
-      "version": "17.0.21"
+      "path": "C:\\hostedtoolcache\\windows\\Java_Temurin-Hotspot_jdk\\17.0.21-100000002\\x64\\bin\\java.exe",
+      "version": "17.0.21.1"
     },
     {
       "name": "node",
@@ -199,7 +198,7 @@
     {
       "name": "php",
       "path": "c:\\tools\\php\\php.exe",
-      "version": "8.5.12"
+      "version": "8.5.13"
     },
     {
       "name": "python",
@@ -208,8 +207,8 @@
     },
     {
       "name": "ruby",
-      "path": "C:\\hostedtoolcache\\windows\\Ruby\\3.3.13\\x64\\bin\\ruby.exe",
-      "version": "3.3.13"
+      "path": "C:\\hostedtoolcache\\windows\\Ruby\\3.3.14\\x64\\bin\\ruby.exe",
+      "version": "3.3.14"
     },
     {
       "name": "rust",
@@ -230,5 +229,8 @@
     "arch": "amd64",
     "kernel": "3.6.10-5a1665c8.x86_64",
     "os": "windows"
-  }
+  },
+  "unmeasured": [
+    "docker.compose_version"
+  ]
 }
